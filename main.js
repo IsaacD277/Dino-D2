@@ -112,7 +112,9 @@ document.addEventListener("DOMContentLoaded", function() {
     loginBtn.textContent = "🚪 Log Out";
     loginBtn.onclick = () => {
       localStorage.removeItem("id_token");
-      location.reload();
+      // Redirect to Cognito logout endpoint
+      const logoutUrl = 'https://auth.isaacd2.com/logout?client_id=62mm4ei4r5os6muq4b4c5fue8m&logout_uri=https%3A%2F%2Fisaacd277.github.io%2FDino-D2%2F';
+      window.location = logoutUrl;
     };
   } else {
     loginBtn.textContent = "✨ Login with Cognito";
