@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
   } else {
     loginBtn.textContent = "✨ Login with Cognito";
     loginBtn.onclick = () => {
-      const loginUrl = 'https://auth.isaacd2.com/login?client_id=7ftcq3nq571hpgt92jb1ihm0ch&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fdev.isaacd2.com%2Fnewsletter';
+      const loginUrl = 'https://auth.isaacd2.com/login/continue?client_id=62mm4ei4r5os6muq4b4c5fue8m&response_type=token&scope=email+openid+phone&redirect_uri=https%3A%2F%2Fisaacd277.github.io%2FDino-D2%2F';
       window.location = loginUrl;
     };
   }
