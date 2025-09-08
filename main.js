@@ -112,7 +112,9 @@ document.addEventListener("DOMContentLoaded", function() {
     loginBtn.textContent = "🚪 Log Out";
     loginBtn.onclick = () => {
       localStorage.removeItem("id_token");
-      location.reload();
+      // Redirect to Cognito logout endpoint
+      const logoutUrl = 'https://auth.isaacd2.com/logout?client_id=62mm4ei4r5os6muq4b4c5fue8m&logout_uri=https%3A%2F%2Fisaacd277.github.io%2FDino-D2%2F';
+      window.location = logoutUrl;
     };
   } else {
     loginBtn.textContent = "✨ Login with Cognito";
@@ -139,13 +141,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // If just logged in, store token and update UI
   if (tokens.id_token) {
-  localStorage.setItem("id_token", tokens.id_token);
-  // Optionally, show a non-destructive login success message
-  const msg = document.createElement('div');
-  msg.className = 'success';
-  msg.textContent = 'Logged in successfully.';
-  document.body.appendChild(msg);
-  setTimeout(() => msg.remove(), 3000);
+    localStorage.setItem("id_token", tokens.id_token);
+    // Optionally, show a non-destructive login success message
+    const msg = document.createElement('div');
+    msg.className = 'success';
+    msg.textContent = 'Logged in successfully.';
+    document.body.appendChild(msg);
+    setTimeout(() => msg.remove(), 3000);
+    // Update login/logout button state after login
+    loginBtn.textContent = "🚪 Log Out";
+    loginBtn.onclick = () => {
+      localStorage.removeItem("id_token");
+      const logoutUrl = 'https://auth.isaacd2.com/logout?client_id=62mm4ei4r5os6muq4b4c5fue8m&logout_uri=https%3A%2F%2Fisaacd277.github.io%2FDino-D2%2F';
+      window.location = logoutUrl;
+    };
   }
 
   // Enable subscribe/refresh if token is present
