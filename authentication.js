@@ -28,18 +28,24 @@ function isLoggedIn() {
 }
 
 function showStatus() {
-    const statusDiv = document.getElementById("status");
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (isLoggedIn()) {
-    statusDiv.innerText = "✅ You are logged in!";
-    loginBtn.style.display = "none";
-    logoutBtn.style.display = "inline";
-    } else {
-    statusDiv.innerText = "❌ You are logged out.";
-    loginBtn.style.display = "inline";
-    logoutBtn.style.display = "none";
-    }
+    const loggedIn = isLoggedIn();
+
+    document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+    document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+
+
+    // const statusDiv = document.getElementById("status");
+    // const loginBtn = document.getElementById("loginBtn");
+    // const logoutBtn = document.getElementById("logoutBtn");
+    // if (isLoggedIn()) {
+    // statusDiv.innerText = "✅ You are logged in!";
+    // loginBtn.style.display = "none";
+    // logoutBtn.style.display = "inline";
+    // } else {
+    // statusDiv.innerText = "❌ You are logged out.";
+    // loginBtn.style.display = "inline";
+    // logoutBtn.style.display = "none";
+    // }
 }
 
 // === LOGIN/LOGOUT ACTIONS ===

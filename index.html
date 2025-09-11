@@ -5,15 +5,23 @@
 </head>
 <body>
   <h1>Welcome to Dino D2</h1>
-  <div id="status"></div>
-  <button id="loginBtn">Login</button>
-  <button id="logoutBtn" style="display:none;">Logout</button>
 
-  <h3>Subscribers</h3>
-  <ul id="subscribersList"></ul>
-  
-  <h3>Campaigns</h3>
-  <ul id="campaignsList"></ul>
+    <!-- Logged-out view -->
+  <div id="loggedOutView">
+    <p>❌ You must be logged in to view the content.</p>
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <div id="loggedInView">
+    <p>✅ Welcome back</p>
+    <button id="logoutBtn">Logout</button>
+
+    <h3>Subscribers</h3>
+    <ul id="subscribersList"></ul>
+    
+    <h3>Campaigns</h3>
+    <ul id="campaignsList"></ul>
+  </div>
 
 
   <script src="authentication.js"></script>
