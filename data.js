@@ -152,42 +152,28 @@ function renderCampaigns(campaigns) {
     });
 }
 
-document.getElementById("getToken").addEventListener("click", async () => {
+document.getElementById("addCampaign").addEventListener("click", async () => {
     try {
-            const response = await fetch("https://beacon.isaacd2.com/userUnsubscribe", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                    body: JSON.stringify({
-                        testing: "supposed to be the tenantId",
-                        emailAddress: "idarr@gmail.com",
-                        newsletterId: "the newsletter ID"
-                    })
-            });
+        const response = await fetch("https://beacon.isaacd2.com/campaigns", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token
+            },
+            body: JSON.stringify({})
+        });
 
-            const specialToken = await response.text();
-            console.log(specialToken); // See what the server actually returned
-        } catch (error) {
-            console.error(error);
-            return null;
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-});
 
-document.getElementById("unsubber").addEventListener("click", async () => {
-    const token = "qwerty"
-    try {
-            const response = await fetch(`https://beacon.isaacd2.com/unsubscribe?token=${token}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
+        data = await response.json();
+        const campaignId = data.campaignId;
+        
+        window.location.href = `campaign.html?campaignId=${campaignId}`;
 
-            const specialToken = await response.json();
-            console.log(specialToken);
-        } catch (error) {
-            console.error(error);
-            return null;
-        }
+    } catch (error) {
+        console.error(error);
+        return null
+    }
 });
