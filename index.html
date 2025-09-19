@@ -1,155 +1,31 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Newsletter Dashboard</title>
-  <link rel="stylesheet" href="main.css">
+  <title>Dino D2 - Login Example</title>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Newsletter Dashboard</h1>
-      <div class="auth-section">
-        <button id="loginBtn" class="btn">✨ Login with Cognito</button>
-        <button id="refreshBtn" class="btn" style="display:none;">🔄 Refresh</button>
-      </div>
-    </header>
+  <h1>Welcome to Dino D2</h1>
 
-    <nav class="tabs">
-      <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-      <button class="tab-btn" data-tab="subscribers">Subscribers</button>
-      <button class="tab-btn" data-tab="campaigns">Campaigns</button>
-    </nav>
-
-    <!-- Dashboard Tab -->
-    <div class="tab-content active" id="dashboard">
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Total Subscribers</div>
-          <div class="metric-value">245</div>
-          <div class="metric-trend">↑ 12% this month</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Open Rate</div>
-          <div class="metric-value">32.9%</div>
-          <div class="metric-trend">↑ 5% this month</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Click Rate</div>
-          <div class="metric-value">4.7%</div>
-          <div class="metric-trend">↑ 2% this month</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Send Email to User</h2>
-        <form id="emailForm">
-          <div class="form-grid">
-            <div class="input-group">
-              <select id="emailRecipient" class="form-input" required>
-                <option value="">Select Recipient</option>
-                <!-- Options will be populated dynamically -->
-              </select>
-            </div>
-            <div class="input-group">
-              <select id="emailCampaign" class="form-input" required>
-                <option value="">Select Campaign</option>
-                <!-- Options will be populated dynamically -->
-              </select>
-            </div>
-            <div class="input-group">
-              <select id="emailVersion" class="form-input" required>
-                <option value="">Select Version</option>
-                <option value="a">A</option>
-                <option value="b">B</option>
-              </select>
-            </div>
-            <button type="submit" id="emailBtn" class="btn btn-submit">Send Email</button>
-          </div>
-        </form>
-        <div id="emailResult" class="result"></div>
-      </div>
-    </div>
-
-    <!-- Subscribers Tab -->
-    <div class="tab-content" id="subscribers">
-      <!-- <div class="card">
-        <h2>� Add New Subscriber</h2>
-      </div> -->
-      <div class="card">
-        <h2>Current Subscribers</h2>
-        <form id="subscribeForm">
-          <div class="form-grid">
-            <div class="input-group">
-              <input type="text" id="firstName" class="form-input" placeholder="First Name" required />
-            </div>
-            <div class="input-group">
-              <input type="email" id="emailAddress" class="form-input" placeholder="Email Address" required />
-            </div>
-            <button type="submit" id="subscribeBtn" class="btn btn-submit" disabled>Add Subscriber</button>
-          </div>
-        </form>
-        <!-- <div id="subscribeResult" class="result"></div> -->
-        <div id="output"></div>
-        <div class="data-table">
-          <table id="subscribersTable">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Subscribed Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Will be populated dynamically -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Campaigns Tab -->
-    <div class="tab-content" id="campaigns">
-      <div class="card">
-        <h2>Campaign List</h2>
-        <form id="campaignForm">
-          <div class="form-grid">
-            <div class="input-group">
-              <input type="text" id="campaignName" class="form-input" placeholder="Campaign Name" required />
-            </div>
-            <div class="input-group">
-              <select id="campaignVersion" class="form-input" required>
-                <option value="">Select Version</option>
-                <option value="a">Version A</option>
-                <option value="b">Version B</option>
-              </select>
-            </div>
-            <div class="input-group">
-              <input type="text" id="campaignSubject" class="form-input" placeholder="Email Subject" required />
-            </div>
-            <div class="input-group">
-              <input type="text" id="campaignPreview" class="form-input" placeholder="Email Preview" required />
-            </div>
-            <div class="input-group">
-              <input type="date" id="campaignSendDate" class="form-input" required />
-            </div>
-            <button type="submit" id="campaignBtn" class="btn btn-submit" disabled>Add Campaign</button>
-          </div>
-        </form>
-        <div id="campaignResult" class="result"></div>
-        <div id="campaignsOutput"></div>
-        <!-- New campaign card list -->
-        <div id="campaignsCardList">
-          <!-- Cards will be populated dynamically by JS -->
-        </div>
-      </div>
-    </div>
+    <!-- Logged-out view -->
+  <div id="loggedOutView">
+    <p>❌ You must be logged in to view the content.</p>
+    <button id="loginBtn">Login</button>
   </div>
 
-  <script src="main.js"></script>
+  <div id="loggedInView">
+    <p>✅ Welcome back</p>
+    <button id="logoutBtn">Logout</button>
+
+    <h3>Subscribers</h3>
+    <ul id="subscribersList"></ul>
+    
+    <h3>Newsletters</h3>
+    <button id="addNewsletter">New Newsletter</button>
+    <ul id="newslettersList"></ul>
+  </div>
+
+
+  <script src="authentication.js"></script>
+  <script src="data.js"></script>
 </body>
 </html>
