@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     getSubscribers();
-    getCampaigns();
+    getNewsletters();
 });
 
 async function getSubscribers() {
@@ -113,9 +113,9 @@ function renderSubscribers(subscribers) {
   });
 }
 
-async function getCampaigns() {
+async function getNewsletters() {
     try {
-        const response = await fetch("https://beacon.isaacd2.com/campaigns", {
+        const response = await fetch("https://beacon.isaacd2.com/newsletters", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -127,34 +127,48 @@ async function getCampaigns() {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const campaigns = await response.json();
-        console.log(campaigns)
-        renderCampaigns(campaigns)
+        const newsletters = await response.json();
+        console.log(newsletters)
+        renderNewsletters(newsletters)
     } catch (error) {
         console.error("Error fetching subscribers:", error);
         return null;
     }
 }
 
-function renderCampaigns(campaigns) {
-    const list = document.getElementById("campaignsList");
+function renderNewsletters(newsletters) {
+    const list = document.getElementById("newslettersList");
     list.innerHTML = ""; // clear old content
     
-    if (campaigns.length === 0) {
-        list.innerHTML = "<li>No subscribers yet.</li>";
+    if (newsletters.length === 0) {
+        list.innerHTML = "<li>No newsletters yet.</li>";
         return;
     }
 
-    campaigns.forEach(campaign => {
+    newsletters.forEach(newsletter => {
+
+        const button = document.createElement("button");
+        button.textContent = "Edit";
+        button.style.marginLeft = "10px";
+
         const li = document.createElement("li");
-        li.textContent = `Sent : ${campaign.sendDate} : ${campaign.subject} -> ${campaign.preview}`;
+        li.textContent = `Sent : ${newsletter.sendDate} : Stage: ${newsletter.stage} : ${newsletter.subject} -> ${newsletter.preview}`;
+        
+        button.addEventListener("click", () => {
+            console.log(newsletter)
+            console.log("Editing newsletter:", newsletter.newsletterId);
+            window.location.href = `newsletter.html?newsletterId=${newsletter.newsletterId}`;
+        });
+
+        li.appendChild(button);
+               
         list.appendChild(li);
     });
 }
 
-document.getElementById("addCampaign").addEventListener("click", async () => {
+document.getElementById("addNewsletter").addEventListener("click", async () => {
     try {
-        const response = await fetch("https://beacon.isaacd2.com/campaigns", {
+        const response = await fetch("https://beacon.isaacd2.com/newsletters", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -164,13 +178,13 @@ document.getElementById("addCampaign").addEventListener("click", async () => {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`HTTP error! Stage: ${response.stage}`);
         }
 
         data = await response.json();
-        const campaignId = data.campaignId;
+        const newsletterId = data.newsletterId;
         
-        window.location.href = `campaign.html?campaignId=${campaignId}`;
+        window.location.href = `newsletter.html?newsletterId=${newsletterId}`;
 
     } catch (error) {
         console.error(error);
