@@ -1,4 +1,5 @@
 // Get newsletterId from URL
+<<<<<<< HEAD
     let trixInitialized = false;
     let pendingContent = null;
 
@@ -29,6 +30,8 @@
     }
   }
 
+=======
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
     function getNewsletterId() {
       const params = new URLSearchParams(window.location.search);
       return params.get('newsletterId');
@@ -53,10 +56,17 @@
         return res.json();
       })
       .then(data => {
+<<<<<<< HEAD
         document.getElementById('subject').value = data.subject || "";
         document.getElementById('preview').value = data.preview || "";
         pendingContent = data.content || "";
           setTrixContentIfReady();
+=======
+        console.log(data)
+        document.getElementById('subject').value = data.subject || "";
+        document.getElementById('preview').value = data.preview || "";
+        document.getElementById('content').value = data.content || "";
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
         document.getElementById('stageDropdown').value = data.stage || "Draft";
         document.getElementById('sendDate').value = data.sendDate || "";
         document.getElementById('pageTitle').textContent = "Edit Newsletter";
@@ -66,6 +76,7 @@
       });
     }
 
+<<<<<<< HEAD
     document.getElementById('viewOutput').addEventListener('click', function() {
       // Get the HTML content from the hidden input (Trix output)
       const trixHtml = document.getElementById('content').value;
@@ -73,6 +84,8 @@
       alert(trixHtml);
     });
 
+=======
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
     // Save newsletter (update)
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -107,6 +120,7 @@
 
     document.getElementById('backBtn').onclick = () => {
       window.location.href = "index.html";
+<<<<<<< HEAD
     };
 
 addEventListener("trix-initialize", function(event) {
@@ -120,3 +134,6 @@ addEventListener("trix-initialize", function(event) {
     group: false
   };
 });
+=======
+    };
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2

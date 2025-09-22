@@ -22,16 +22,20 @@
       vertical-align: top;
     }
   </style>
+<<<<<<< HEAD
 
   <!-- Trix Editor for rich text content -->
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
   <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+=======
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
 </head>
 <body>
   <h1 id="pageTitle">Create/Edit Newsletter</h1>
   <form id="newsletterForm">
     <label>
       Subject:
+<<<<<<< HEAD
       <input type="text" id="subject" name="subject">
     </label>
 
@@ -46,6 +50,18 @@
     <button type="button" id="viewOutput">See Output</button>
     <br>
 
+=======
+      <input type="text" id="subject" name="subject" required>
+    </label>
+    <label>
+      Preview:
+      <input type="text" id="preview" name="preview" required>
+    </label>
+    <label>
+      Content:
+      <textarea id="content" name="content" rows="8"></textarea>
+    </label>
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
     <label class="inline-label">
       Stage:
       <select id="stageDropdown" name="stage" class="third-width" required>
@@ -54,11 +70,15 @@
         <option value="Sent">Sent</option>
       </select>
     </label>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
     <label class="inline-label">
       Send Date:
       <input type="date" id="sendDate" name="sendDate" class="third-width">
     </label>
+<<<<<<< HEAD
 
     <button type="submit">Save Newsletter</button>
   </form>
@@ -74,6 +94,10 @@
   </form>
     
 
+=======
+    <button type="submit">Save Newsletter</button>
+  </form>
+>>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
   <button id="backBtn">Back</button>
   <div id="stage"></div>
 
