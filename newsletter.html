@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create/Edit Newsletter</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    label { display: block; margin-top: 1em; }
+    input, textarea, select { width: 100%; padding: 0.5em; margin-top: 0.2em; }
+    button { margin-top: 1em; }
+    /* Add styles for smaller width fields */
+    .third-width {
+      width: 33%;
+      min-width: 180px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .inline-label {
+      display: inline-block;
+      width: 49%;
+      margin-right: 1%;
+      vertical-align: top;
+    }
+  </style>
+
+  <!-- Trix Editor for rich text content -->
+  <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+  <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+</head>
+<body>
+  <h1 id="pageTitle">Create/Edit Newsletter</h1>
+  <form id="newsletterForm">
+    <label>
+      Subject:
+      <input type="text" id="subject" name="subject">
+    </label>
+
+    <label>
+      Preview:
+      <input type="text" id="preview" name="preview">
+    </label>
+
+    <label for="content">Newsletter Content:</label>
+    <input id="content" type="hidden" name="content">
+    <trix-editor input="content"></trix-editor>
+    <button type="button" id="viewOutput">See Output</button>
+    <br>
+
+    <label class="inline-label">
+      Stage:
+      <select id="stageDropdown" name="stage" class="third-width" required>
+        <option value="Draft">Draft</option>
+        <option value="Ready">Ready</option>
+        <option value="Sent">Sent</option>
+      </select>
+    </label>
+
+    <label class="inline-label">
+      Send Date:
+      <input type="date" id="sendDate" name="sendDate" class="third-width">
+    </label>
+
+    <button type="submit">Save Newsletter</button>
+  </form>
+
+  <h2>Send Test Email</h2>
+  <form id="testEmail">
+    <label>
+      Test Recipient Email:
+      <input type="email" id="testEmailInput" name="testEmail" class="third-width">
+    </label>
+
+    <button type="submit" id="test">Send Test Email</button>
+  </form>
+    
+
+  <button id="backBtn">Back</button>
+  <div id="stage"></div>
+
+  <script src="newsletter.js"></script>
+</body>
+</html>

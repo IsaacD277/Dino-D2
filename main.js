@@ -25,12 +25,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("emailBtn").disabled = true;
   }
 
-  // Populate campaign dropdown for email form
-  function populateEmailCampaignDropdown(campaigns) {
-    const select = document.getElementById("emailCampaign");
+  // Populate newsletter dropdown for email form
+  function populateEmailNewsletterDropdown(newsletters) {
+    const select = document.getElementById("emailNewsletter");
     while (select.options.length > 1) select.remove(1);
-    if (Array.isArray(campaigns)) {
-      const names = Array.from(new Set(campaigns.map(c => c.campaign).filter(Boolean)));
+    if (Array.isArray(newsletters)) {
+      const names = Array.from(new Set(newsletters.map(c => c.newsletter).filter(Boolean)));
       for (const name of names) {
         const opt = document.createElement("option");
         opt.value = name;
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
     e.preventDefault();
     const token = localStorage.getItem("id_token");
     const recipient = document.getElementById("emailRecipient").value;
-    const campaign = document.getElementById("emailCampaign").value;
+    const newsletter = document.getElementById("emailNewsletter").value;
     let version = document.getElementById("emailVersion").value;
     version = version === 'a' ? 'a' : version === 'b' ? 'b' : '';
 
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         body: JSON.stringify({
           recipient,
-          campaign,
+          newsletter,
           version
         })
       });
@@ -289,35 +289,35 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   };
 
-  // Enable campaign form if logged in
+  // Enable newsletter form if logged in
   if (localStorage.getItem("id_token")) {
-    document.getElementById("campaignBtn").disabled = false;
-    fetchCampaigns();
+    document.getElementById("newsletterBtn").disabled = false;
+    fetchNewsletters();
   }
 
-  // Render Campaign Cards
-  function renderCampaignCards(campaigns) {
-    const container = document.getElementById('campaignsCardList');
-    container.className = 'campaign-card-list';
+  // Render Newsletter Cards
+  function renderNewsletterCards(newsletters) {
+    const container = document.getElementById('newslettersCardList');
+    container.className = 'newsletter-card-list';
     container.innerHTML = '';
-    // Sort campaigns so the most recent is last (reverse of previous)
-    const sortedCampaigns = [...campaigns].sort((a, b) => {
+    // Sort newsletters so the most recent is last (reverse of previous)
+    const sortedNewsletters = [...newsletters].sort((a, b) => {
       const aDate = a.sendDate ? new Date(a.sendDate) : new Date(0);
       const bDate = b.sendDate ? new Date(b.sendDate) : new Date(0);
       return bDate - aDate; // descending order
     });
-    sortedCampaigns.forEach(campaign => {
+    sortedNewsletters.forEach(newsletter => {
       const card = document.createElement('div');
-      card.className = 'campaign-card';
+      card.className = 'newsletter-card';
       // Use helper functions to get status class and text
-      const statusClass = getStatusClass(campaign);
-      const statusText = getStatusText(campaign);
+      const statusClass = getStatusClass(newsletter);
+      const statusText = getStatusText(newsletter);
       card.innerHTML = `
-        <div class="campaign-avatar"></div>
-        <div class="campaign-details">
-          <div class="campaign-subject">${campaign.subject}</div>
-          <div class="campaign-preview">${campaign.preview}</div>
-          <span class="campaign-status ${statusClass}">
+        <div class="newsletter-avatar"></div>
+        <div class="newsletter-details">
+          <div class="newsletter-subject">${newsletter.subject}</div>
+          <div class="newsletter-preview">${newsletter.preview}</div>
+          <span class="newsletter-status ${statusClass}">
             ${statusText}
           </span>
         </div>
@@ -326,34 +326,34 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Render campaigns as cards
-  function renderCampaigns(data) {
-    populateEmailCampaignDropdown(data);
-    renderCampaignCards(data);
+  // Render newsletters as cards
+  function renderNewsletters(data) {
+    populateEmailNewsletterDropdown(data);
+    renderNewsletterCards(data);
   }
 
-  // Fetch campaigns from API
-  async function fetchCampaigns() {
+  // Fetch newsletters from API
+  async function fetchNewsletters() {
     const token = localStorage.getItem("id_token");
     if (!token) return;
-    document.getElementById("campaignsOutput").innerHTML = '<div class="loading">Loading campaigns...</div>';
+    document.getElementById("newslettersOutput").innerHTML = '<div class="loading">Loading newsletters...</div>';
     try {
-      const res = await fetch(apiUrl + "/campaigns", {
+      const res = await fetch(apiUrl + "/newsletters", {
         method: "GET",
         headers: { Authorization: token }
       });
       const data = await res.json();
-      renderCampaigns(data);
+      renderNewsletters(data);
     } catch (err) {
-      document.getElementById("campaignsOutput").innerHTML = `<div class="error">Error: ${err.message}</div>`;
+      document.getElementById("newslettersOutput").innerHTML = `<div class="error">Error: ${err.message}</div>`;
     }
   }
 
-  // Campaign form handler
-  // Helper functions for campaign status
-  function getStatusClass(campaign) {
+  // Newsletter form handler
+  // Helper functions for newsletter status
+  function getStatusClass(newsletter) {
     const now = new Date();
-    const sendDate = campaign.sendDate ? new Date(campaign.sendDate) : null;
+    const sendDate = newsletter.sendDate ? new Date(newsletter.sendDate) : null;
     
     if (!sendDate) return 'draft';
     if (sendDate < now) return 'sent';
@@ -361,9 +361,9 @@ document.addEventListener("DOMContentLoaded", function() {
     return 'active';
   }
 
-  function getStatusText(campaign) {
+  function getStatusText(newsletter) {
     const now = new Date();
-    const sendDate = campaign.sendDate ? new Date(campaign.sendDate) : null;
+    const sendDate = newsletter.sendDate ? new Date(newsletter.sendDate) : null;
     
     if (!sendDate) return 'Draft';
     if (sendDate < now) return 'Sent';
@@ -396,49 +396,49 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   };
 
-  window.editCampaign = (campaignName) => {
-    // TODO: Implement campaign editing
-    console.log('Edit campaign:', campaignName);
+  window.editNewsletter = (newsletterName) => {
+    // TODO: Implement newsletter editing
+    console.log('Edit newsletter:', newsletterName);
   };
 
-  window.deleteCampaign = async (campaignName) => {
-    if (!confirm(`Are you sure you want to delete campaign ${campaignName}?`)) return;
+  window.deleteNewsletter = async (newsletterName) => {
+    if (!confirm(`Are you sure you want to delete newsletter ${newsletterName}?`)) return;
     
     const token = localStorage.getItem("id_token");
     try {
-      const res = await fetch(`${apiUrl}/campaigns/${encodeURIComponent(campaignName)}`, {
+      const res = await fetch(`${apiUrl}/newsletters/${encodeURIComponent(newsletterName)}`, {
         method: "DELETE",
         headers: { Authorization: token }
       });
       if (res.ok) {
-        fetchCampaigns(); // Refresh the list
+        fetchNewsletters(); // Refresh the list
       } else {
-        alert('Failed to delete campaign');
+        alert('Failed to delete newsletter');
       }
     } catch (err) {
       alert('Error: ' + err.message);
     }
   };
 
-  document.getElementById("campaignForm").onsubmit = async (e) => {
+  document.getElementById("newsletterForm").onsubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("id_token");
-    const campaign = document.getElementById("campaignName").value;
-    const version = document.getElementById("campaignVersion").value;
-    const subject = document.getElementById("campaignSubject").value;
-    const preview = document.getElementById("campaignPreview").value;
-    const sendDate = document.getElementById("campaignSendDate").value;
-    document.getElementById("campaignResult").textContent = "Submitting...";
-    document.getElementById("campaignResult").className = "result loading";
+    const newsletter = document.getElementById("newsletterName").value;
+    const version = document.getElementById("newsletterVersion").value;
+    const subject = document.getElementById("newsletterSubject").value;
+    const preview = document.getElementById("newsletterPreview").value;
+    const sendDate = document.getElementById("newsletterSendDate").value;
+    document.getElementById("newsletterResult").textContent = "Submitting...";
+    document.getElementById("newsletterResult").className = "result loading";
     try {
-      const res = await fetch(apiUrl + "/campaign", {
+      const res = await fetch(apiUrl + "/newsletter", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: token
         },
         body: JSON.stringify({
-          campaign,
+          newsletter,
           version,
           sendDate,
           subject,
@@ -462,13 +462,13 @@ document.addEventListener("DOMContentLoaded", function() {
       } catch (e) {
         msg = await res.text();
       }
-      document.getElementById("campaignResult").textContent = msg;
-      document.getElementById("campaignResult").className = res.ok ? "result success" : "result error";
-      document.getElementById("campaignForm").reset();
-      fetchCampaigns();
+      document.getElementById("newsletterResult").textContent = msg;
+      document.getElementById("newsletterResult").className = res.ok ? "result success" : "result error";
+      document.getElementById("newsletterForm").reset();
+      fetchNewsletters();
     } catch (err) {
-      document.getElementById("campaignResult").textContent = "Error: " + err.message;
-      document.getElementById("campaignResult").className = "result error";
+      document.getElementById("newsletterResult").textContent = "Error: " + err.message;
+      document.getElementById("newsletterResult").className = "result error";
     }
   };
 });
