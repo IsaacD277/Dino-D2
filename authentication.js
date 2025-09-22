@@ -1,9 +1,5 @@
 // === CONFIG ===
-<<<<<<< HEAD
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-=======
-const isLocal = window.location.hostname === "localhost";
->>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
 const clientId = "62mm4ei4r5os6muq4b4c5fue8m";
 const domain = "https://auth.isaacd2.com";
 const redirectUri = isLocal ? "http://localhost:5500" : "https://isaacd277.github.io/Dino-D2/"; // must match Cognito app settings

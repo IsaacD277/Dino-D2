@@ -7,7 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     getSubscribers();
     getNewsletters();
-<<<<<<< HEAD
     populateDropdowns();
 });
 // --- Dropdown population and send logic ---
@@ -100,8 +99,6 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
     } catch (err) {
         statusSpan.textContent = "❌ Error: " + err.message;
     }
-=======
->>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
 });
 
 async function getSubscribers() {
@@ -204,7 +201,6 @@ function renderSubscribers(subscribers) {
 
     li.appendChild(button);
 
-<<<<<<< HEAD
     const sendButton = document.createElement("button");
     sendButton.textContent = "Send Test Email";
     sendButton.style.marginLeft = "10px";
@@ -242,8 +238,6 @@ function renderSubscribers(subscribers) {
 
     li.appendChild(sendButton);
 
-=======
->>>>>>> 759795bb227cd6e427694abf33099990bcc2a7c2
     list.appendChild(li);
   });
 }
