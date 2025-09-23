@@ -171,43 +171,43 @@ function renderSubscribers(subscribers) {
         button.addEventListener("click", async () => {
             try {
                 if (sub.active) {
-                const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
-                    method: "PATCH",
-                    headers: {
-                    "Content-Type": "application/json",
-                    Authorization: token
-                    },
-                    body: JSON.stringify({ userId: sub.secondary })
-                });
+                    const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
+                        method: "PATCH",
+                        headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token
+                        },
+                        body: JSON.stringify({ userId: sub.secondary })
+                    });
 
-                if (response.ok) {
-                    sub.active = false;
-                    statusTd.textContent = "Unsubscribed";
-                    button.textContent = "Resubscribe";
-                    alert(`${sub.emailAddress} unsubscribed successfully`);
+                    if (response.ok) {
+                        sub.active = false;
+                        statusTd.textContent = "Unsubscribed";
+                        button.textContent = "Resubscribe";
+                        alert(`${sub.emailAddress} unsubscribed successfully`);
+                    } else {
+                        const error = await response.text();
+                        alert("Failed to unsubscribe: " + error);
+                    }
                 } else {
-                    const error = await response.text();
-                    alert("Failed to unsubscribe: " + error);
-                }
-                } else {
-                const response = await fetch("https://beacon.isaacd2.com/subscribe", {
-                    method: "POST",
-                    headers: {
-                    "Content-Type": "application/json",
-                    Authorization: token
-                    },
-                    body: JSON.stringify({ userId: sub.secondary })
-                });
+                    const response = await fetch(`https://beacon.isaacd2.com/subscribers/${encodeURIComponent(sub.secondary)}`, {
+                        method: "PATCH",
+                        headers: {
+                        "Content-Type": "application/json",
+                        Authorization: token
+                        },
+                        body: JSON.stringify({ active: true })
+                    });
 
-                if (response.ok) {
-                    sub.active = true;
-                    statusTd.textContent = "Active";
-                    button.textContent = "Unsubscribe";
-                    alert(`${sub.emailAddress} resubscribed successfully`);
-                } else {
-                    const error = await response.text();
-                    alert("Failed to resubscribe: " + error);
-                }
+                    if (response.ok) {
+                        sub.active = true;
+                        statusTd.textContent = "Active";
+                        button.textContent = "Unsubscribe";
+                        alert(`${sub.emailAddress} resubscribed successfully`);
+                    } else {
+                        const error = await response.text();
+                        alert("Failed to resubscribe: " + error);
+                    }
                 }
             } catch (err) {
                 console.error(err);
@@ -226,85 +226,6 @@ function renderSubscribers(subscribers) {
             tbody.appendChild(tr);
         });
 }
-
-
-//     const list = document.getElementById("subscribersList");
-//     list.innerHTML = ""; // clear old content
-
-//     if (subscribers.length === 0) {
-//         list.innerHTML = "<li>No subscribers yet.</li>";
-//         return;
-//     }
-
-//     subscribers.forEach(sub => {
-//         const li = document.createElement("li");
-//         // Adjust field names to whatever your API returns
-//         li.textContent = `${sub.firstName} | ${sub.emailAddress} (joined: ${sub.subscriptionDate || "unknown"}) ${sub.active ? "Still Active" : "Unsubscribed"}`;
-
-//         const button = document.createElement("button");
-//         button.textContent = sub.active ? "Unsubscribe" : "Resubscribe";
-//         button.style.marginRight = "10px";
-//         button.style.marginBottom = "5px";
-
-//         button.addEventListener("click", async () => {
-//             if (sub.active) {
-//                 try {
-//                     const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
-//                         method: "PATCH",
-//                         headers: {
-//                             "Content-Type": "application/json",
-//                             Authorization: token
-//                         },
-//                         body: JSON.stringify({
-//                             userId: sub.secondary
-//                         })
-//                     });
-
-//                     if (response.ok) {
-//                         alert(`${sub.emailAddress} unsubscribed successfully`);
-//                         li.textContent = `${sub.firstName} | ${sub.emailAddress} (joined: ${sub.subscriptionDate || "unknown"}) No longer active`;
-//                     } else {
-//                         const error = await response.text();
-//                         alert("Failed to unsubscribe: " + error);
-//                     }
-//                 } catch (err) {
-//                     console.error(err);
-//                     alert("Something went wrong.");
-//                 }
-//             } else {
-//                 try {
-//                     const response = await fetch("https://beacon.isaacd2.com/subscribe", {
-//                         method: "POST",
-//                         headers: {
-//                             "Content-Type": "application/json",
-//                             Authorization: token
-//                         },
-//                         body: JSON.stringify({
-//                             userId: sub.secondary
-//                         })
-//                     });
-
-//                     if (response.ok) {
-//                         alert(`${sub.emailAddress} resubscribed successfully`);
-//                         li.textContent = `${sub.firstName} | ${sub.emailAddress} (joined: ${sub.subscriptionDate || "unknown"}) Now active`;
-//                         button.textContent = "Unsubscribe";
-//                         li.appendChild(button);
-//                     } else {
-//                         const error = await response.text();
-//                         alert("Failed to resubscribe: " + error);
-//                     }
-//                 } catch (err) {
-//                     console.error(err);
-//                     alert("Something went wrong.");
-//                 }
-//             }
-            
-            
-//         });
-//         li.insertBefore(button, li.childNodes[0]);
-//         list.appendChild(li);
-//     });
-// }
 
 async function getNewsletters() {
     try {
@@ -385,11 +306,11 @@ document.getElementById("addNewsletter").addEventListener("click", async () => {
 document.getElementById("addSubscriber").addEventListener("click", async () => {
     try {
         const payload = {
-        emailAddress: document.getElementById('emailAddress').value || "",
-        firstName: document.getElementById('firstName').value || ""
-      };
+            emailAddress: document.getElementById('emailAddress').value || "",
+            firstName: document.getElementById('firstName').value || ""
+        };
 
-        const response = await fetch("https://beacon.isaacd2.com/subscribe", {
+        const response = await fetch("https://beacon.isaacd2.com/subscribers", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
