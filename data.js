@@ -30,7 +30,9 @@ async function populateDropdowns() {
             if (sub.active) {
                 foundActive = true;
                 const opt = document.createElement("option");
-                opt.value = sub.emailAddress;
+                // store a small JSON payload in the option value so we can recover both fields
+                // use the actual subscriber field name 'secondary' for the id
+                opt.value = JSON.stringify({ secondary: sub.secondary, email: sub.emailAddress });
                 opt.textContent = `${sub.firstName} (${sub.emailAddress})`;
                 userDropdown.appendChild(opt);
             }
@@ -71,13 +73,27 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
     const userDropdown = document.getElementById("userDropdown");
     const newsletterDropdown = document.getElementById("newsletterDropdown");
     const statusSpan = document.getElementById("sendNewsletterStatus");
-    const recipient = userDropdown.value;
     const newsletterId = newsletterDropdown.value;
     statusSpan.textContent = "";
-    if (!recipient || !newsletterId) {
+
+    if (!userDropdown.value || !newsletterId) {
         statusSpan.textContent = "Please select both a user and a newsletter.";
         return;
     }
+
+    // parse the JSON payload we stored on the option value
+    let selected;
+    try {
+        selected = JSON.parse(userDropdown.value);
+    } catch (e) {
+        statusSpan.textContent = "Invalid user selected.";
+        return;
+    }
+
+    const userId = selected.secondary;
+    const recipient = selected.email;
+    console.log(userId, recipient);
+
     try {
         const response = await fetch("https://beacon.isaacd2.com/email", {
             method: "POST",
@@ -86,8 +102,9 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
                 Authorization: token
             },
             body: JSON.stringify({
+                userId: userId,
                 recipient: recipient,
-                newsletter: newsletterId,
+                newsletterId: newsletterId
             })
         });
         if (response.ok) {
@@ -153,7 +170,7 @@ function renderSubscribers(subscribers) {
                         Authorization: token
                     },
                     body: JSON.stringify({
-                        emailAddress: sub.emailAddress
+                        userId: sub.secondary
                     })
                 });
 
