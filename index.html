@@ -17,9 +17,23 @@
     <button id="logoutBtn">Logout</button>
 
     <h3>Subscribers</h3>
-    <input id="emailAddress", type="email", required>
-    <input id="firstName"></input>
+    <input id="firstName" placeholder="First Name" required autocomplete="given-name">
+    <input type="email" id="emailAddress" placeholder="Email Address" required autocomplete="email">
     <button id="addSubscriber">Add Subscriber</button>
+    <table id="subscribersTable" border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Email Address</th>
+          <th>Joined</th>
+          <th>Status</th>
+          <th>Action</th>
+      </thead>
+      <tbody>
+        <tr><td colspan="5">No subscribers yet.</td></tr>
+      </tbody>
+    </table>
+
     <ul id="subscribersList"></ul>
     
     <h3>Newsletters</h3>
