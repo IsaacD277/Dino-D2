@@ -320,3 +320,33 @@ document.getElementById("addNewsletter").addEventListener("click", async () => {
         return null
     }
 });
+
+document.getElementById("addSubscriber").addEventListener("click", async () => {
+    try {
+        const payload = {
+        emailAddress: document.getElementById('emailAddress').value || "",
+        firstName: document.getElementById('firstName').value || ""
+      };
+
+        const response = await fetch("https://beacon.isaacd2.com/subscribe", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Stage: ${response.stage}`);
+        }
+
+        data = await response.json();
+        alert(`Successfully added ${emailAddress.value} as a subscriber`);
+        getSubscribers();
+
+    } catch (error) {
+        console.error(error);
+        return null
+    }
+});
