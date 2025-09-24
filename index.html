@@ -38,7 +38,20 @@
     
     <h3>Newsletters</h3>
     <button id="addNewsletter">New Newsletter</button>
-    <ul id="newslettersList"></ul>
+    <table id="newslettersTable" border="1" cellspacing="0" cellpadding="5">
+      <thead>
+        <tr>
+          <th>Subject</th>
+          <th>Preview</th>
+          <th>Stage</th>
+          <th>Send Date</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="5">No newsletters yet.</td></tr>
+      </tbody>
+    </table>
 
     <h3>Send Newsletter to User</h3>
     <label for="userDropdown">Select Active User:</label>

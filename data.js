@@ -245,35 +245,53 @@ async function getNewsletters() {
         console.log(newsletters)
         renderNewsletters(newsletters)
     } catch (error) {
-        console.error("Error fetching subscribers:", error);
+        console.error("Error fetching newsletters:", error);
         return null;
     }
 }
 
 function renderNewsletters(newsletters) {
-    const list = document.getElementById("newslettersList");
-    list.innerHTML = ""; // clear old content
-    
-    if (newsletters.length === 0) {
-        list.innerHTML = "<li>No newsletters yet.</li>";
+    const table = document.getElementById("newslettersTable");
+    const tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    if (!newsletters || newsletters.length === 0) {
+        tbody.innerHTML = "<tr><td colspan ='5'>No newsletters yet.</td></tr>";
         return;
     }
 
     newsletters.forEach(newsletter => {
+        const tr = document.createElement("tr");
 
+        const subjectTd = document.createElement("td");
+        subjectTd.textContent = newsletter.subject || "";
+
+        const previewTd = document.createElement("td");
+        previewTd.textContent = newsletter.preview || "";
+
+        const stageTd = document.createElement("td");
+        stageTd.textContent = newsletter.stage;
+
+        const sendDateTd = document.createElement("td");
+        sendDateTd.textContent = newsletter.sendDate;
+
+        const editTd = document.createElement("td");
         const button = document.createElement("button");
         button.textContent = "Edit";
-        button.style.marginLeft = "10px";
 
-        const li = document.createElement("li");
-        li.textContent = `Sent : ${newsletter.sendDate} : Stage: ${newsletter.stage} : ${newsletter.subject} -> ${newsletter.preview}`;
-        
         button.addEventListener("click", () => {
             window.location.href = `newsletter.html?newsletterId=${newsletter.newsletterId}`;
         });
 
-        li.appendChild(button);
-        list.appendChild(li);
+        editTd.appendChild(button);
+
+        tr.appendChild(subjectTd);
+        tr.appendChild(previewTd);
+        tr.appendChild(stageTd);
+        tr.appendChild(sendDateTd);
+        tr.appendChild(editTd);
+
+        tbody.appendChild(tr);
     });
 }
 
