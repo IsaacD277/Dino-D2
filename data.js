@@ -280,7 +280,7 @@ function renderNewsletters(newsletters) {
         button.textContent = "Edit";
 
         button.addEventListener("click", () => {
-            window.location.href = `newsletter.html?newsletterId=${newsletter.newsletterId}`;
+            window.location.href = `newsletter.html?newsletterId=${newsletter.id}`;
         });
 
         editTd.appendChild(button);
@@ -311,7 +311,7 @@ document.getElementById("addNewsletter").addEventListener("click", async () => {
         }
 
         data = await response.json();
-        const newsletterId = data.newsletterId;
+        const newsletterId = data.id;
         
         window.location.href = `newsletter.html?newsletterId=${newsletterId}`;
 
