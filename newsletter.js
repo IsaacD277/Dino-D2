@@ -67,6 +67,37 @@ if (newsletterId) {
   });
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+    if (!token) {
+        return null
+    }
+
+    getStats()
+});
+
+function getStats() {
+    fetch(`https://beacon.isaacd2.com/stats/${encodeURIComponent(newsletterId)}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: token
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error("Failed to load stats");
+        return res.json();
+    })
+    .then(data => {
+        // Handle stats data here
+        console.log(data);
+        document.getElementById('sendCount').textContent = data.sent || "0";
+        document.getElementById('openRate').textContent = data.openRate ? (data.openRate) + "%" : "0%";
+    })
+    .catch(err => {
+        console.error("Error fetching stats:", err);
+    });
+}
+
 document.getElementById('viewOutput').addEventListener('click', function() {
   // Get the HTML content from the hidden input (Trix output)
   const trixHtml = document.getElementById('content').value;
