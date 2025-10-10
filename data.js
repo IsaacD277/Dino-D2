@@ -190,7 +190,7 @@ function renderSubscribers(subscribers) {
                         alert("Failed to unsubscribe: " + error);
                     }
                 } else {
-                    const response = await fetch(`https://beacon.isaacd2.com/subscribers/${encodeURIComponent(sub.secondary)}`, {
+                    const response = await fetch(`https://beacon.isaacd2.com/subscribers/${encodeURIComponent(sub.id)}`, {
                         method: "PATCH",
                         headers: {
                         "Content-Type": "application/json",
