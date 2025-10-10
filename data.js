@@ -26,10 +26,10 @@ async function populateDropdowns() {
         userDropdown.innerHTML = "";
         let foundActive = false;
         subscribers.forEach(sub => {
-            if (sub.active) {
+            if (sub.condition == "subscribed") {
                 foundActive = true;
                 const opt = document.createElement("option");
-                opt.value = JSON.stringify({ secondary: sub.secondary, email: sub.emailAddress });
+                opt.value = JSON.stringify({ id: sub.id, email: sub.emailAddress });
                 opt.textContent = `${sub.firstName} (${sub.emailAddress})`;
                 userDropdown.appendChild(opt);
             }
@@ -162,26 +162,26 @@ function renderSubscribers(subscribers) {
         joinedTd.textContent = sub.subscriptionDate || "unknown";
 
         const statusTd = document.createElement("td");
-        statusTd.textContent = sub.active ? "Active" : "Unsubscribed";
+        statusTd.textContent = sub.condition == "subscribed" ? "Active" : "Unsubscribed";
 
         const actionTd = document.createElement("td");
         const button = document.createElement("button");
-        button.textContent = sub.active ? "Unsubscribe" : "Resubscribe";
+        button.textContent = sub.condition == "subscribed" ? "Unsubscribe" : "Resubscribe";
 
         button.addEventListener("click", async () => {
             try {
-                if (sub.active) {
+                if (sub.condition == "subscribed") {
                     const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
                         method: "PATCH",
                         headers: {
                         "Content-Type": "application/json",
                         Authorization: token
                         },
-                        body: JSON.stringify({ userId: sub.secondary })
+                        body: JSON.stringify({ userId: sub.id })
                     });
 
                     if (response.ok) {
-                        sub.active = false;
+                        sub.condition = "unsubscribed";
                         statusTd.textContent = "Unsubscribed";
                         button.textContent = "Resubscribe";
                         alert(`${sub.emailAddress} unsubscribed successfully`);
@@ -196,11 +196,11 @@ function renderSubscribers(subscribers) {
                         "Content-Type": "application/json",
                         Authorization: token
                         },
-                        body: JSON.stringify({ active: true })
+                        body: JSON.stringify({ "condition": "subscribed" })
                     });
 
                     if (response.ok) {
-                        sub.active = true;
+                        sub.condition = "subscribed";
                         statusTd.textContent = "Active";
                         button.textContent = "Unsubscribe";
                         alert(`${sub.emailAddress} resubscribed successfully`);
