@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function populateDropdowns() {
     const userDropdown = document.getElementById("userDropdown");
     const newsletterDropdown = document.getElementById("newsletterDropdown");
+    console.log(newsletterDropdown);
     // Populate users
     try {
         const subRes = await fetch("https://beacon.isaacd2.com/subscribers", {
@@ -56,7 +57,8 @@ async function populateDropdowns() {
         } else {
             newsletters.forEach(nl => {
                 const opt = document.createElement("option");
-                opt.value = nl.newsletterId;
+                const id = nl.id || nl.newsletterId || "";
+                opt.value = id;
                 opt.textContent = `${nl.subject} (${nl.sendDate || 'No date'})`;
                 newsletterDropdown.appendChild(opt);
             });
@@ -87,7 +89,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
         return;
     }
 
-    const userId = selected.secondary;
+    const userId = selected.id;
     const recipient = selected.email;
     console.log(userId, recipient);
 
@@ -100,7 +102,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
             },
             body: JSON.stringify({
                 userId: userId,
-                recipient: recipient,
+                emailAddress: recipient,
                 newsletterId: newsletterId
             })
         });
