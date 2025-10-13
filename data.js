@@ -368,3 +368,7 @@ document.getElementById("addSubscriber").addEventListener("click", async () => {
         return null
     }
 });
+
+document.getElementById("profileBtn").addEventListener("click", () => {
+            window.location.href = `profile.html`;
+        });

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    label { display: block; margin-top: 1em; }
+    input, textarea, select { width: 100%; padding: 0.5em; margin-top: 0.2em; }
+    input:read-only { background-color: #f0f0f0; cursor: not-allowed; }
+    button { margin-top: 1em; }
+    /* Add styles for smaller width fields */
+    .third-width {
+      width: 33%;
+      min-width: 180px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .inline-label {
+      display: inline-block;
+      width: 49%;
+      margin-right: 1%;
+      vertical-align: top;
+    }
+    .readonly-section {
+      background-color: #f9f9f9;
+      padding: 1em;
+      border-radius: 5px;
+      margin-top: 1em;
+    }
+    .readonly-section h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="pageTitle">Profile</h1>
+
+  <form id="profileForm">
+    <!-- Editable Fields -->
+    <label>
+      Newsletter Name:
+      <input type="text" id="newsletterName" name="newsletterName">
+    </label>
+
+    <label>
+      Business Address:
+      <input type="text" id="businessAddress" name="businessAddress">
+    </label>
+
+    <label>
+      Domain:
+      <input type="text" id="domain" name="domain">
+    </label>
+
+    <label>
+      Owner Name:
+      <input type="text" id="owner" name="owner">
+    </label>
+
+    <label>
+      Owner Email Address:
+      <input type="email" id="ownerEmail" name="ownerEmail">
+    </label>
+
+    <label>
+      Reply-To Email Address:
+      <input type="text" id="replyToEmail" name="replyToEmail">
+    </label>
+
+    <label>
+      Sender Name:
+      <input type="text" id="senderName" name="senderName">
+    </label>
+
+    <!-- Read-only Information -->
+    <div class="readonly-section">
+      <h2>Account Information (Read-only)</h2>
+      
+      <label>
+        Joined:
+        <input type="text" id="createdAt" name="joined" readonly>
+      </label>
+
+      <label>
+        Max Subscribers:
+        <input type="text" id="maxSubscribers" name="maxSubscribers" readonly>
+      </label>
+
+      <label>
+        Plan:
+        <input type="text" id="plan" name="plan" readonly>
+      </label>
+    </div>
+
+    <br>
+
+    <button type="submit">Save Changes</button>
+  </form>    
+
+  <button id="backBtn">Back</button>
+  <div id="stage"></div>
+
+  <script src="profile.js"></script>
+</body>
+</html>
