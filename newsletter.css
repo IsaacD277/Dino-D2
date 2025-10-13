@@ -1,0 +1,371 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body { 
+    font-family: 'Montserrat', sans-serif;
+    background-color: #ebf5f6;
+    min-height: 100vh;
+    padding: 2em;
+    color: #2D3142;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2.5em;
+}
+
+h1 {
+    color: #2D3142;
+    font-size: 2em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+}
+
+/* Stats Section */
+.stats {
+    display: flex;
+    gap: 2em;
+    margin: 1.5em 0 2em 0;
+    padding: 1.5em;
+    background-color: #F7D4A7;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.stats p {
+    margin: 0;
+    font-size: 0.95em;
+    color: #2D3142;
+    font-weight: 500;
+}
+
+.stats span {
+    font-weight: 700;
+    color: #277A7D;
+    font-size: 1.1em;
+}
+
+form {
+    margin-top: 2em;
+}
+
+label { 
+    display: block;
+    margin-top: 1.5em;
+    font-weight: 500;
+    color: #277A7D;
+    font-size: 0.9em;
+    margin-bottom: 0.5em;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"],
+textarea,
+select { 
+    width: 100%;
+    padding: 0.75em;
+    margin-top: 0.25em;
+    border: 2px solid #edf1f0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    background: #edf1f0;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #277A7D;
+    box-shadow: 0 0 0 3px rgba(39, 122, 125, 0.1);
+}
+
+/* Trix Editor Styling */
+trix-toolbar {
+    background: #f8f9fa;
+    border: 2px solid #e2e8f0;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 0.5em;
+    margin-top: 0.5em;
+}
+
+trix-toolbar .trix-button-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+trix-toolbar .trix-button-group {
+    background: transparent;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    margin: 2px;
+    display: flex;
+}
+
+trix-toolbar .trix-button {
+    background: white;
+    border: none;
+    border-right: 1px solid #e2e8f0;
+    border-radius: 0;
+    padding: 0.5em;
+    transition: all 0.2s ease;
+    color: #4a5568;
+}
+
+trix-toolbar .trix-button:first-child {
+    border-radius: 6px 0 0 6px;
+}
+
+trix-toolbar .trix-button:last-child {
+    border-right: none;
+    border-radius: 0 6px 6px 0;
+}
+
+trix-toolbar .trix-button-group:has(> .trix-button:only-child) .trix-button {
+    border-radius: 6px;
+    border-right: none;
+}
+
+trix-toolbar .trix-button:hover {
+    background: #e2e8f0;
+    color: #2D3142;
+}
+
+trix-toolbar .trix-button.trix-active {
+    background: #cbd5e0;
+    color: #2D3142;
+}
+
+trix-toolbar .trix-dialogs {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+}
+
+trix-editor {
+    border: 2px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 1em;
+    min-height: 300px;
+    background: white;
+    margin-bottom: 1em;
+}
+
+trix-editor:focus {
+    border-color: #277A7D;
+    box-shadow: 0 0 0 3px rgba(39, 122, 125, 0.1);
+    outline: none;
+}
+
+/* Metadata Section */
+.metadata-section {
+    background-color: #f7fafc;
+    padding: 1.5em;
+    border-radius: 12px;
+    margin-top: 1.5em;
+    border: 2px solid #edf1f0;
+}
+
+.metadata-section h3 {
+    color: #2D3142;
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 1em;
+}
+
+/* Inline Labels for smaller fields */
+.inline-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
+}
+
+.inline-fields label {
+    margin-top: 0;
+}
+
+.third-width {
+    width: 100%;
+}
+
+/* Action Buttons Section */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
+    margin-top: 2em;
+    padding-top: 2em;
+    border-top: 2px solid #edf1f0;
+}
+
+button { 
+    padding: 0.85em 2em;
+    border: none;
+    border-radius: 9999px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: inherit;
+}
+
+button[type="submit"] {
+    background-color: #E17163;
+    color: white;
+    width: 100%;
+    font-size: 1.05em;
+    box-shadow: 0 4px 12px rgba(225, 113, 99, 0.3);
+}
+
+button[type="submit"]:hover {
+    background-color: #277A7D;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(39, 122, 125, 0.4);
+}
+
+button[type="submit"]:active {
+    transform: scale(1.02);
+}
+
+button[type="button"] {
+    background: #e2e9e9;
+    color: white;
+    box-shadow: 0 4px 12px rgba(86, 88, 88, 0.3);
+}
+
+button[type="button"]:hover {
+    background-color: #E17163;
+    transform: scale(1.05);
+}
+
+#viewOutput {
+    background: white;
+    color: #277A7D;
+    border: 2px solid #277A7D;
+    width: auto;
+    align-self: flex-start;
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+}
+
+#viewOutput:hover {
+    background: #277A7D;
+    color: white;
+    transform: scale(1.05);
+}
+
+#sendAllBtn {
+    background-color: #E17163;
+    color: white;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(225, 113, 99, 0.3);
+}
+
+#sendAllBtn:hover {
+    background-color: #c85a4d;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(200, 90, 77, 0.4);
+}
+
+#backBtn {
+    background: white;
+    color: #277A7D;
+    border: 2px solid #277A7D;
+    width: 100%;
+}
+
+#backBtn:hover {
+    background: #277A7D;
+    color: white;
+    transform: scale(1.05);
+}
+
+#stage, #send {
+    margin-top: 1em;
+    padding: 1em;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#stage:not(:empty),
+#send:not(:empty) {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #22543d;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    body {
+    padding: 1em;
+    }
+
+    .container {
+    padding: 1.5em;
+    }
+
+    h1 {
+    font-size: 1.5em;
+    }
+
+    .stats {
+    flex-direction: column;
+    gap: 0.75em;
+    }
+
+    .inline-fields {
+    grid-template-columns: 1fr;
+    }
+
+    trix-editor {
+    min-height: 200px;
+    }
+
+    trix-toolbar .trix-button-group {
+    margin: 1px;
+    }
+
+    #viewOutput {
+    width: 100%;
+    }
+}
+
+/* Loading state */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Success/Error states */
+.success {
+    background: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #22543d;
+}
+
+.error {
+    background: #fff5f5;
+    border: 1px solid #fc8181;
+    color: #742a2a;
+}
