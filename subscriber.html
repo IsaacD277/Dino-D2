@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Subscriber</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2em; }
+    label { display: block; margin-top: 1em; }
+    input, textarea, select { width: 100%; padding: 0.5em; margin-top: 0.2em; }
+    button { margin-top: 1em; }
+    /* Add styles for smaller width fields */
+    .third-width {
+      width: 33%;
+      min-width: 180px;
+      display: inline-block;
+      vertical-align: top;
+    }
+    .inline-label {
+      display: inline-block;
+      width: 49%;
+      margin-right: 1%;
+      vertical-align: top;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="pageTitle">Edit Subscriber</h1>
+
+  <form id="subscriberForm">
+    <label>
+      First Name:
+      <input type="text" id="firstName" name="firstName">
+    </label>
+
+    <label>
+      Email Address:
+      <input type="email" id="emailAddress" name="emailAddress">
+    </label>
+
+    <label>
+        Status:
+        <select id="conditionDropdown" name="condition" class="third-width" required>
+            <option value="Subscribed">Subscribed</option>
+            <option value="Unsubscribed">Unsubscribed</option>
+            <option value="Deleted">Deleted</option>
+        </select>
+    </label>
+
+    <br>
+
+    <button type="submit">Save Changes</button>
+  </form>    
+
+  <button id="backBtn">Back</button>
+  <div id="stage"></div>
+
+  <script src="subscriber.js"></script>
+</body>
+</html>

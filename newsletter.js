@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return null
     }
 
-    getStats()
+    getStats();
 });
 
 function getStats() {

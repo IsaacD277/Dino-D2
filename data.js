@@ -151,7 +151,15 @@ function renderSubscribers(subscribers) {
         return;
     }
 
+    const options = {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    };
+
     subscribers.forEach(sub => {
+        const subscribeDate = sub.created ? new Date(sub.created) : null;
         const tr = document.createElement("tr");
 
         const nameTd = document.createElement("td");
@@ -161,61 +169,67 @@ function renderSubscribers(subscribers) {
         emailTd.textContent = sub.emailAddress || "";
 
         const joinedTd = document.createElement("td");
-        joinedTd.textContent = sub.subscriptionDate || "unknown";
+        joinedTd.textContent = subscribeDate && !isNaN(subscribeDate)
+            ? subscribeDate.toLocaleString("en-US", options)
+            : "unknown";
 
         const statusTd = document.createElement("td");
-        statusTd.textContent = sub.condition == "subscribed" ? "Active" : "Unsubscribed";
+        statusTd.textContent = sub.condition || "";
 
         const actionTd = document.createElement("td");
         const button = document.createElement("button");
-        button.textContent = sub.condition == "subscribed" ? "Unsubscribe" : "Resubscribe";
+        button.textContent = "Edit";
 
-        button.addEventListener("click", async () => {
-            try {
-                if (sub.condition == "subscribed") {
-                    const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
-                        method: "PATCH",
-                        headers: {
-                        "Content-Type": "application/json",
-                        Authorization: token
-                        },
-                        body: JSON.stringify({ userId: sub.id })
-                    });
+        button.addEventListener("click", () => {
+            window.location.href = `subscriber.html?subscriberId=${sub.id}`;
+        });
 
-                    if (response.ok) {
-                        sub.condition = "unsubscribed";
-                        statusTd.textContent = "Unsubscribed";
-                        button.textContent = "Resubscribe";
-                        alert(`${sub.emailAddress} unsubscribed successfully`);
-                    } else {
-                        const error = await response.text();
-                        alert("Failed to unsubscribe: " + error);
-                    }
-                } else {
-                    const response = await fetch(`https://beacon.isaacd2.com/subscribers/${encodeURIComponent(sub.id)}`, {
-                        method: "PATCH",
-                        headers: {
-                        "Content-Type": "application/json",
-                        Authorization: token
-                        },
-                        body: JSON.stringify({ "condition": "subscribed" })
-                    });
+        // button.addEventListener("click", async () => {
+        //     try {
+        //         if (sub.condition == "subscribed") {
+        //             const response = await fetch("https://beacon.isaacd2.com/unsubscribe", {
+        //                 method: "PATCH",
+        //                 headers: {
+        //                 "Content-Type": "application/json",
+        //                 Authorization: token
+        //                 },
+        //                 body: JSON.stringify({ userId: sub.id })
+        //             });
 
-                    if (response.ok) {
-                        sub.condition = "subscribed";
-                        statusTd.textContent = "Active";
-                        button.textContent = "Unsubscribe";
-                        alert(`${sub.emailAddress} resubscribed successfully`);
-                    } else {
-                        const error = await response.text();
-                        alert("Failed to resubscribe: " + error);
-                    }
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Something went wrong.");
-            }
-            });
+        //             if (response.ok) {
+        //                 sub.condition = "unsubscribed";
+        //                 statusTd.textContent = "Unsubscribed";
+        //                 button.textContent = "Resubscribe";
+        //                 alert(`${sub.emailAddress} unsubscribed successfully`);
+        //             } else {
+        //                 const error = await response.text();
+        //                 alert("Failed to unsubscribe: " + error);
+        //             }
+        //         } else {
+        //             const response = await fetch(`https://beacon.isaacd2.com/subscribers/${encodeURIComponent(sub.id)}`, {
+        //                 method: "PATCH",
+        //                 headers: {
+        //                 "Content-Type": "application/json",
+        //                 Authorization: token
+        //                 },
+        //                 body: JSON.stringify({ "condition": "subscribed" })
+        //             });
+
+        //             if (response.ok) {
+        //                 sub.condition = "subscribed";
+        //                 statusTd.textContent = "Active";
+        //                 button.textContent = "Unsubscribe";
+        //                 alert(`${sub.emailAddress} resubscribed successfully`);
+        //             } else {
+        //                 const error = await response.text();
+        //                 alert("Failed to resubscribe: " + error);
+        //             }
+        //         }
+        //     } catch (err) {
+        //         console.error(err);
+        //         alert("Something went wrong.");
+        //     }
+        //     });
 
             actionTd.appendChild(button);
 
@@ -344,7 +358,9 @@ document.getElementById("addSubscriber").addEventListener("click", async () => {
         }
 
         data = await response.json();
-        alert(`Successfully added ${emailAddress.value} as a subscriber`);
+        // alert(`Successfully added ${emailAddress.value} as a subscriber`);
+        document.getElementById('emailAddress').value = "";
+        document.getElementById('firstName').value = "";
         getSubscribers();
 
     } catch (error) {
