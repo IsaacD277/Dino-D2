@@ -98,13 +98,6 @@ function getStats() {
     });
 }
 
-document.getElementById('viewOutput').addEventListener('click', function() {
-  // Get the HTML content from the hidden input (Trix output)
-  const trixHtml = document.getElementById('content').value;
-  // Show in an alert (or replace with your own display logic)
-  alert(trixHtml);
-});
-
 // Save newsletter (update)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();

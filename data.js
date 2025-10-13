@@ -27,7 +27,7 @@ async function populateDropdowns() {
         userDropdown.innerHTML = "";
         let foundActive = false;
         subscribers.forEach(sub => {
-            if (sub.condition == "subscribed") {
+            if (sub.condition == "Subscribed") {
                 foundActive = true;
                 const opt = document.createElement("option");
                 opt.value = JSON.stringify({ id: sub.id, email: sub.emailAddress });

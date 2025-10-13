@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background: #f5f7fb;
   min-height: 100vh;
@@ -458,7 +458,7 @@ tr:last-child td {
   color: #991b1b;
 }
 
-/* ...existing code... */
+/* ...existing code... */ /*
 .newsletter-card-list {
   display: flex;
   flex-direction: column;
@@ -529,4 +529,4 @@ tr:last-child td {
 .newsletter-status.draft {
   background: #c9a7a7;
   color: #6e3a3a;
-}
+} */

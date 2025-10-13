@@ -2,8 +2,24 @@
 <html>
 <head>
   <title>DinoD2</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    /* Top-right profile button */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #ebf5f6;
+      color: #2D3142;
+      line-height: 1.6;
+    }
+
+    /* Topbar Styles */
     .topbar {
       position: fixed;
       top: 0;
@@ -12,15 +28,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: #fff;
-      
+      padding: 16px 24px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       z-index: 1000;
     }
 
     .topbar h1 {
       margin: 0;
-      font-size: 20px;
+      font-size: 24px;
+      font-weight: 700;
+      color: #E17163;
       flex: 1;
       text-align: center;
     }
@@ -28,113 +46,470 @@
     .topbar-left,
     .topbar-right {
       display: flex;
-      gap: 8px;
-      min-width: 100px; /* ensures centering stays balanced */
+      gap: 10px;
+      min-width: 120px;
+    }
+
+    .topbar-right {
+      justify-content: flex-end;
     }
 
     .profile-btn,
     .logout-btn,
     .login-btn {
-      padding: 6px 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background: #fff;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      border: 2px solid #E17163;
+      background: white;
+      color: #E17163;
       cursor: pointer;
       font-size: 14px;
+      font-weight: 600;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    /* prevent page content from sitting under the fixed topbar */
-    body { padding-top: 60px; }
-
-    #loggedOutView p {
-      text-align: center;
-      margin: 0;
-      font-size: 18px;
+    .profile-btn:hover,
+    .logout-btn:hover,
+    .login-btn:hover {
+      background: #E17163;
+      color: white;
+      transform: scale(1.05);
     }
 
+    /* Content Container */
+    .content {
+      padding: 80px 20px 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Logged Out View */
     #loggedOutView {
-      margin: 5em;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #loggedOutView .topbar {
+      /* Override topbar positioning for logged-out view */
+      position: fixed;
+    }
+
+    #loggedOutView .message-box {
+      background: white;
+      border-radius: 20px;
+      padding: 3em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      margin-top: calc(33.33vh - 80px);
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #loggedOutView .message-box p {
+      font-size: 18px;
+      margin: 0.5em 0;
+      color: #2D3142;
+    }
+
+    #loggedOutView .message-box p:first-child,
+    #loggedOutView .message-box p:last-child {
+      color: #E17163;
+      font-weight: 600;
+    }
+
+    #loggedOutView .message-box p:first-child {
+      font-size: 20px;
+    }
+
+    #loggedOutView .message-box p:last-child {
+      margin-bottom: 1.5em;
+    }
+
+    #loggedOutView .login-btn {
+      margin-top: 1em;
+    }
+
+    #loggedOutView .login-btn:hover {
+      transform: scale(1.05);
+    }
+
+    #loggedOutView .topbar-left,
+    #loggedOutView .topbar-right {
+      display: none;
+    }
+
+    #loggedInView {
+      display: none;
+    }
+
+    /* Section Styles */
+    .section {
+      background: white;
+      border-radius: 20px;
+      padding: 2em;
+      margin-bottom: 2em;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1em;
+    }
+
+    .section-header h3 {
+      margin-bottom: 0;
+    }
+
+    h3 {
+      color: #2D3142;
+      font-size: 1.5em;
+      font-weight: 700;
+      margin-bottom: 1em;
+    }
+
+    /* Form Styles */
+    .form-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 10px;
+      margin-bottom: 1em;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+      padding: 0.75em;
+      border: 2px solid #edf1f0;
+      border-radius: 8px;
+      font-size: 1em;
+      font-family: 'Montserrat', sans-serif;
+      background: #edf1f0;
+      transition: all 0.3s ease;
+      width: 100%;
+      display: block;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #277A7D;
+      box-shadow: 0 0 0 3px rgba(39, 122, 125, 0.1);
+    }
+
+    /* Prevent browser autofill styling differences */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0 1000px #edf1f0 inset;
+      -webkit-text-fill-color: #2D3142;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    button {
+      padding: 0.75em 2em;
+      border: none;
+      border-radius: 9999px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    button:not(.profile-btn):not(.logout-btn):not(.login-btn) {
+      background-color: #E17163;
+      color: white;
+      box-shadow: 0 4px 12px rgba(225, 113, 99, 0.3);
+    }
+
+    button:not(.profile-btn):not(.logout-btn):not(.login-btn):hover {
+      background-color: #277A7D;
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(39, 122, 125, 0.4);
+    }
+
+    #addNewsletter {
+      margin-bottom: 1.5em;
+      margin-bottom: 0;
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+      background: white;
+    }
+
+    thead {
+      background-color: #F7D4A7;
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #2D3142;
+      border-bottom: 2px solid #edf1f0;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #edf1f0;
+      color: #4a5568;
+    }
+
+    tbody tr:hover {
+      background-color: #f7fafc;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    td button {
+      padding: 0.5em 1em;
+      font-size: 0.9em;
+      background: #277A7D;
+      color: white;
+    }
+
+    td button:hover {
+      background: #E17163;
+    }
+
+    /* Send Newsletter Section */
+    .send-newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .send-newsletter-form label {
+      font-weight: 500;
+      color: #277A7D;
+      margin-bottom: 0.5em;
+      display: block;
+    }
+
+    #sendNewsletterStatus {
+      display: inline-block;
+      margin-left: 1em;
+      padding: 0.5em 1em;
+      border-radius: 8px;
+      font-weight: 500;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    #sendNewsletterStatus:not(:empty) {
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      color: #22543d;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .topbar {
+        padding: 12px 16px;
+      }
+
+      .topbar h1 {
+        font-size: 18px;
+      }
+
+      .topbar-left,
+      .topbar-right {
+        min-width: 80px;
+      }
+
+      .profile-btn,
+      .logout-btn,
+      .login-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+      }
+
+      .content {
+        padding: 70px 10px 30px 10px;
+      }
+
+      .section {
+        padding: 1.5em;
+      }
+
+      h3 {
+        font-size: 1.2em;
+      }
+
+      .form-group {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      select {
+        width: 100%;
+      }
+
+      table {
+        font-size: 14px;
+      }
+
+      th, td {
+        padding: 8px;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1em;
+      }
+
+      .section-header h3 {
+        margin-bottom: 0;
+      }
+
+      .section-header button {
+        width: 100%;
+      }
+
+      /* Make tables scrollable on mobile */
+      .table-wrapper {
+        overflow-x: auto;
+      }
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-    <!-- Logged-out view -->
+  <!-- Logged-out view -->
   <div id="loggedOutView">
     <header class="topbar">
-      <div class="topbar-left">
-        <!-- Left side spacer for balance -->
-      </div>
+      <div class="topbar-left"></div>
       <h1>DinoD2</h1>
-      <div class="topbar-right">
-        <button id="loginBtn" class="login-btn">Login</button>
-        <!-- Right side spacer for balance -->
-      </div>
+      <div class="topbar-right"></div>
     </header>
-    <p>❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌</p>
-    <p>❌ You must be logged in to view the content. ❌</p>
-    <p>❌❌❌❌❌❌❌❌❌❌❌❌❌❌❌</p>
+    <div class="message-box">
+      <p>Access Restricted</p>
+      <p>You must be logged in to view the content.</p>
+      <button id="loginBtn" class="login-btn">Please log in to continue</button>
+    </div>
   </div>
 
   <div id="loggedInView">
     <header class="topbar">
-      <div class="topbar-left">
-        <!-- Left side spacer for balance -->
-      </div>
+      <div class="topbar-left"></div>
       <h1>DinoD2</h1>
       <div class="topbar-right">
-        <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
         <button id="profileBtn" class="profile-btn" title="Profile">Profile</button>
+        <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
       </div>
     </header>
 
-    <h3>Subscribers</h3>
-    <input id="firstName" placeholder="First Name" required autocomplete="given-name">
-    <input type="email" id="emailAddress" placeholder="Email Address" required autocomplete="email">
-    <button id="addSubscriber">Add Subscriber</button>
-    <table id="subscribersTable" border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th>First Name</th>
-          <th>Email Address</th>
-          <th>Joined</th>
-          <th>Status</th>
-          <th>Edit</th>
-      </thead>
-      <tbody>
-        <tr><td colspan="5">No subscribers yet.</td></tr>
-      </tbody>
-    </table>
+    <div class="content">
+      <!-- Subscribers Section -->
+      <div class="section">
+        <h3>Subscribers</h3>
+        <div class="form-group">
+          <div class="input-wrapper">
+            <input type="text" id="firstName" placeholder="First Name" required autocomplete="given-name">
+          </div>
+          <div class="input-wrapper">
+            <input type="email" id="emailAddress" placeholder="Email Address" required autocomplete="email">
+          </div>
+          <button id="addSubscriber">Add Subscriber</button>
+        </div>
+        <div class="table-wrapper">
+          <table id="subscribersTable">
+            <thead>
+              <tr>
+                <th>First Name</th>
+                <th>Email Address</th>
+                <th>Joined</th>
+                <th>Status</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="text-align: center; color: #718096;">No subscribers yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    <ul id="subscribersList"></ul>
-    
-    <h3>Newsletters</h3>
-    <button id="addNewsletter">New Newsletter</button>
-    <table id="newslettersTable" border="1" cellspacing="0" cellpadding="5">
-      <thead>
-        <tr>
-          <th>Subject</th>
-          <th>Preview</th>
-          <th>Stage</th>
-          <th>Send Date</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td colspan="5">No newsletters yet.</td></tr>
-      </tbody>
-    </table>
+      <!-- Newsletters Section -->
+      <div class="section">
+        <div class="section-header">
+          <h3>Newsletters</h3>
+          <button id="addNewsletter">New Newsletter</button>
+        </div>
+        <div class="table-wrapper">
+          <table id="newslettersTable">
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Preview</th>
+                <th>Stage</th>
+                <th>Send Date</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="text-align: center; color: #718096;">No newsletters yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-    <h3>Send Newsletter to User</h3>
-    <label for="userDropdown">Select Active User:</label>
-    <select id="userDropdown">
-      <option value="">Loading...</option>
-    </select>
-    <label for="newsletterDropdown">Select Newsletter:</label>
-    <select id="newsletterDropdown">
-      <option value="">Loading...</option>
-    </select>
-    <button id="sendNewsletterBtn">Send Newsletter</button>
-    <span id="sendNewsletterStatus"></span>
+      <!-- Send Newsletter Section -->
+      <div class="section">
+        <h3>Send Test Newsletter</h3>
+        <div class="send-newsletter-form">
+          <div>
+            <label for="userDropdown">Select Active User:</label>
+            <select id="userDropdown">
+              <option value="">Loading...</option>
+            </select>
+          </div>
+          <div>
+            <label for="newsletterDropdown">Select Newsletter:</label>
+            <select id="newsletterDropdown">
+              <option value="">Loading...</option>
+            </select>
+          </div>
+          <div>
+            <button id="sendNewsletterBtn">Send Newsletter</button>
+            <span id="sendNewsletterStatus"></span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="authentication.js"></script>
