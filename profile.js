@@ -10,8 +10,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const options = {
+        timeZone: "America/New_York",
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+    };
+
     // Load profile data
-    fetch(`https://beacon.isaacd2.com/profile`, {
+    fetch(`https://api.dinod2.com/dev/profile`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -28,12 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('businessAddress').value = data.businessAddress || "";
         document.getElementById('domain').value = data.domain || "";
         document.getElementById('owner').value = data.owner || "";
-        document.getElementById('ownerEmail').value = data.ownerEmail || "";
         document.getElementById('replyToEmail').value = data.replyToEmail || "";
         document.getElementById('senderName').value = data.senderName || "";
+        document.getElementById('senderEmail').value = data.senderEmail || "";
 
         // Read-only fields
-        document.getElementById('createdAt').value = data.createdAt || "";
+        document.getElementById('ownerEmail').value = data.ownerEmail || "";
+        const joinedDate = data.createdAt ? new Date(data.createdAt) : null;
+        document.getElementById('createdAt').value = joinedDate.toLocaleString("en-US", options) || "";
         document.getElementById('maxSubscribers').value = data.maxSubscribers || "";
         document.getElementById('plan').value = data.plan || "";
     })
@@ -54,11 +63,12 @@ form.addEventListener('submit', async (e) => {
         owner: document.getElementById('owner').value || "",
         ownerEmail: document.getElementById('ownerEmail').value || "",
         replyToEmail: document.getElementById('replyToEmail').value || "",
-        senderName: document.getElementById('senderName').value || ""
+        senderName: document.getElementById('senderName').value || "",
+        senderEmail: document.getElementById('senderEmail').value || ""
     };
 
     try {
-        const response = await fetch(`https://beacon.isaacd2.com/profile`, {
+        const response = await fetch(`https://api.dinod2.com/dev/profile`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

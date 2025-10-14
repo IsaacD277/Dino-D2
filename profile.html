@@ -33,11 +33,6 @@
       </label>
 
       <label>
-        Owner Email Address:
-        <input type="email" id="ownerEmail" name="ownerEmail" placeholder="owner@example.com">
-      </label>
-
-      <label>
         Reply-To Email Address:
         <input type="text" id="replyToEmail" name="replyToEmail" placeholder="reply@example.com">
       </label>
@@ -47,9 +42,19 @@
         <input type="text" id="senderName" name="senderName" placeholder="Newsletter Team">
       </label>
 
+      <label>
+        Sender Email Address:
+        <input type="email" id="senderEmail" name="senderEmail" placeholder="newsletter@dinod2.com">
+      </label>
+
       <!-- Read-only Information -->
       <div class="readonly-section">
         <h2>Account Information</h2>
+
+        <label>
+          Owner Email Address:
+          <input type="email" id="ownerEmail" name="ownerEmail" readonly>
+        </label>
         
         <label>
           Joined:

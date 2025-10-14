@@ -42,7 +42,7 @@ const sendDiv = document.getElementById('send');
 
 // Load newsletter data if editing
 if (newsletterId) {
-    fetch(`https://beacon.isaacd2.com/newsletters/${encodeURIComponent(newsletterId)}`, {
+    fetch(`https://api.dinod2.com/dev/newsletters/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getStats() {
-    fetch(`https://beacon.isaacd2.com/stats/${encodeURIComponent(newsletterId)}`, {
+    fetch(`https://api.dinod2.com/dev/stats/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -113,7 +113,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const response = await fetch(
-      `https://beacon.isaacd2.com/newsletters/${encodeURIComponent(newsletterId)}`,
+      `https://api.dinod2.com/dev/newsletters/${encodeURIComponent(newsletterId)}`,
       {
         method: "PATCH",
         headers: {
@@ -141,7 +141,7 @@ document.getElementById('sendAllBtn').onclick = async () => {
 
   try {
     const response = await fetch(
-      `https://beacon.isaacd2.com/emailAll`,
+      `https://api.dinod2.com/dev/emailAll`,
       {
         method: "POST",
         headers: {
