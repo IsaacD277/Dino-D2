@@ -16,7 +16,7 @@ It supports:
 - Email sending powered by Amazon SES
 - Authentication and user management via Amazon Cognito
 
-The **frontend** (in this repository) is a static web app built with **HTML, JavaScript, and CSS**, hosted on **Amazon S3** and distributed globally via **CloudFront**.
+The **frontend** (in this repository) is a static web app built with **HTML, JavaScript, and CSS**, hosted on **Amazon S3** and distributed globally via **CloudFront**
 
 ---
 
