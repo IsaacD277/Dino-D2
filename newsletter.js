@@ -42,7 +42,7 @@ const sendDiv = document.getElementById('send');
 
 // Load newsletter data if editing
 if (newsletterId) {
-    fetch(`https://api.dinod2.com/dev/newsletters/${encodeURIComponent(newsletterId)}`, {
+    fetch(`https://api.dinod2.com/v0/newsletters/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getStats() {
-    fetch(`https://api.dinod2.com/dev/stats/${encodeURIComponent(newsletterId)}`, {
+    fetch(`https://api.dinod2.com/v0/stats/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -113,7 +113,7 @@ form.addEventListener('submit', async (e) => {
 
   try {
     const response = await fetch(
-      `https://api.dinod2.com/dev/newsletters/${encodeURIComponent(newsletterId)}`,
+      `https://api.dinod2.com/v0/newsletters/${encodeURIComponent(newsletterId)}`,
       {
         method: "PATCH",
         headers: {
@@ -141,7 +141,7 @@ document.getElementById('sendAllBtn').onclick = async () => {
 
   try {
     const response = await fetch(
-      `https://api.dinod2.com/dev/emailAll`,
+      `https://api.dinod2.com/v0/emailAll`,
       {
         method: "POST",
         headers: {

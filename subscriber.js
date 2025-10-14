@@ -13,7 +13,7 @@ const stageDiv = document.getElementById('stage');
 
 // Load subscriber data if editing
 if (subscriberId) {
-    fetch(`https://api.dinod2.com/dev/subscribers/${encodeURIComponent(subscriberId)}`, {
+    fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
@@ -56,7 +56,7 @@ form.addEventListener('submit', async (e) => {
   try {
     if (condition === 'Deleted') {
 
-        const response = await fetch(`https://api.dinod2.com/dev/subscribers/${encodeURIComponent(subscriberId)}`, {
+        const response = await fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -67,7 +67,7 @@ form.addEventListener('submit', async (e) => {
         stageDiv.textContent = "✅ Subscriber deleted!";
     } else {
         const response = await fetch(
-            `https://api.dinod2.com/dev/subscribers/${encodeURIComponent(subscriberId)}`,
+            `https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`,
             {
             method: "PATCH",
             headers: {

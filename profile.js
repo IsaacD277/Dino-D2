@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Load profile data
-    fetch(`https://api.dinod2.com/dev/profile`, {
+    fetch(`https://api.dinod2.com/v0/profile`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,7 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch(`https://api.dinod2.com/dev/profile`, {
+        const response = await fetch(`https://api.dinod2.com/v0/profile`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",

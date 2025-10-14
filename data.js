@@ -16,7 +16,7 @@ async function populateDropdowns() {
     console.log(newsletterDropdown);
     // Populate users
     try {
-        const subRes = await fetch("https://api.dinod2.com/dev/subscribers", {
+        const subRes = await fetch("https://api.dinod2.com/v0/subscribers", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -43,7 +43,7 @@ async function populateDropdowns() {
     }
     // Populate newsletters
     try {
-        const nlRes = await fetch("https://api.dinod2.com/dev/newsletters", {
+        const nlRes = await fetch("https://api.dinod2.com/v0/newsletters", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -94,7 +94,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
     console.log(userId, recipient);
 
     try {
-        const response = await fetch("https://api.dinod2.com/dev/email", {
+        const response = await fetch("https://api.dinod2.com/v0/email", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -119,7 +119,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
 
 async function getSubscribers() {
     try {
-        const response = await fetch("https://api.dinod2.com/dev/subscribers", {
+        const response = await fetch("https://api.dinod2.com/v0/subscribers", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -187,7 +187,7 @@ function renderSubscribers(subscribers) {
         // button.addEventListener("click", async () => {
         //     try {
         //         if (sub.condition == "subscribed") {
-        //             const response = await fetch("https://api.dinod2.com/dev/unsubscribe", {
+        //             const response = await fetch("https://api.dinod2.com/v0/unsubscribe", {
         //                 method: "PATCH",
         //                 headers: {
         //                 "Content-Type": "application/json",
@@ -206,7 +206,7 @@ function renderSubscribers(subscribers) {
         //                 alert("Failed to unsubscribe: " + error);
         //             }
         //         } else {
-        //             const response = await fetch(`https://api.dinod2.com/dev/subscribers/${encodeURIComponent(sub.id)}`, {
+        //             const response = await fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(sub.id)}`, {
         //                 method: "PATCH",
         //                 headers: {
         //                 "Content-Type": "application/json",
@@ -245,7 +245,7 @@ function renderSubscribers(subscribers) {
 
 async function getNewsletters() {
     try {
-        const response = await fetch("https://api.dinod2.com/dev/newsletters", {
+        const response = await fetch("https://api.dinod2.com/v0/newsletters", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -313,7 +313,7 @@ function renderNewsletters(newsletters) {
 
 document.getElementById("addNewsletter").addEventListener("click", async () => {
     try {
-        const response = await fetch("https://api.dinod2.com/dev/newsletters", {
+        const response = await fetch("https://api.dinod2.com/v0/newsletters", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -344,7 +344,7 @@ document.getElementById("addSubscriber").addEventListener("click", async () => {
             firstName: document.getElementById('firstName').value || ""
         };
 
-        const response = await fetch("https://api.dinod2.com/dev/subscribers", {
+        const response = await fetch("https://api.dinod2.com/v0/subscribers", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
