@@ -1,0 +1,44 @@
+name: Sync Development with Main
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  sync-development:
+    if: github.event.pull_request.merged == true && 
+        github.event.pull_request.base.ref == 'main' && 
+        github.event.pull_request.head.ref == 'development'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Git user
+        run: |
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Fetch all branches
+        run: git fetch --all
+
+      - name: Switch to Development Branch
+        run: |
+          git checkout development
+          git reset --hard origin/development
+
+      - name: Merge Main into Development
+        run: |
+          git checkout development
+          git merge main --allow-unrelated-histories
+
+      - name: Push Changes to Development
+        env:
+          ACTIONS_PAT: ${{ secrets.ACTIONS_PAT }}
+        run: |
+          git remote set-url origin https://$ACTIONS_PAT@github.com/IsaacD277/DinoD2.git
+          git push origin development --force
