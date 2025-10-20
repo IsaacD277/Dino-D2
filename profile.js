@@ -88,3 +88,28 @@ form.addEventListener('submit', async (e) => {
 document.getElementById('backBtn').onclick = () => {
     window.location.href = "index.html";
 };
+
+document.getElementById('getSubscribeToken').onclick = () => {
+    getSubscriberLink();
+}
+
+async function getSubscriberLink() {
+    try {
+        const subRes = await fetch("https://api.dinod2.com/development/getSubscriberLink", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token
+            }
+        });
+        const link = subRes.ok ? await subRes.json() : null;
+        if (link) {
+            alert("Subscriber link: " + link.token);
+        } else {
+            alert("Failed to get subscriber link.");
+        }
+
+    } catch (e) {
+        console.error("Error fetching subscriber link:", e);
+    }
+}
