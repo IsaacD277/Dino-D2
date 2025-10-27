@@ -6,9 +6,11 @@ const stageDiv = document.getElementById('stage');
 
 document.addEventListener("DOMContentLoaded", () => {
     if (!token) {
-        window.location.href = "login.html";
+        window.location.href = "";
         return;
     }
+
+    initAPIMode();
 
     const options = {
         timeZone: "America/New_York",
@@ -18,7 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Load profile data
-    fetch(`https://api.dinod2.com/v0/profile`, {
+    const version = getAPIMode();
+    fetch(`https://api.dinod2.com/${version}/profile`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -68,7 +71,8 @@ form.addEventListener('submit', async (e) => {
     };
 
     try {
-        const response = await fetch(`https://api.dinod2.com/v0/profile`, {
+        const version = getAPIMode();
+        const response = await fetch(`https://api.dinod2.com/${version}/profile`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -94,8 +98,9 @@ document.getElementById('getSubscribeToken').onclick = () => {
 }
 
 async function getSubscriberLink() {
+    const version = getAPIMode();
     try {
-        const subRes = await fetch("https://api.dinod2.com/development/getSubscriberLink", {
+        const subRes = await fetch(`https://api.dinod2.com/${version}/getSubscriberLink`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -112,4 +117,30 @@ async function getSubscriberLink() {
     } catch (e) {
         console.error("Error fetching subscriber link:", e);
     }
+}
+
+function initAPIMode() {
+    const apiCheckbox = document.getElementById("apiSelector");
+    const version = localStorage.getItem("version") || "v0"
+    apiCheckbox.checked = (version === "development");
+}
+
+function setAPIMode() {
+    const apiCheckbox = document.getElementById("apiSelector");
+    console.log(`API Checkbox` + {apiCheckbox});
+    const apiMode = apiCheckbox.checked ? 'development' : 'v0';
+    console.log(`Dev mode` + {apiMode});
+    localStorage.setItem("version", apiMode);
+}
+
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    return version;
+}
+
+const apiCheckbox = document.getElementById("apiSelector");
+if (apiCheckbox) {
+    apiCheckbox.addEventListener('change', setAPIMode);
+    console.log("Happened here")
+    initAPIMode();
 }

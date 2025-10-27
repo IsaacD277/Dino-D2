@@ -42,7 +42,8 @@ const sendDiv = document.getElementById('send');
 
 // Load newsletter data if editing
 if (newsletterId) {
-    fetch(`https://api.dinod2.com/v0/newsletters/${encodeURIComponent(newsletterId)}`, {
+    const version = getAPIMode();
+    fetch(`https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
@@ -76,7 +77,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function getStats() {
-    fetch(`https://api.dinod2.com/v0/stats/${encodeURIComponent(newsletterId)}`, {
+    const version = getAPIMode();
+    fetch(`https://api.dinod2.com/${version}/stats/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -112,8 +114,9 @@ form.addEventListener('submit', async (e) => {
   };
 
   try {
+    const version = getAPIMode();
     const response = await fetch(
-      `https://api.dinod2.com/v0/newsletters/${encodeURIComponent(newsletterId)}`,
+      `https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`,
       {
         method: "PATCH",
         headers: {
@@ -140,8 +143,9 @@ document.getElementById('sendAllBtn').onclick = async () => {
   };
 
   try {
+    const version = getAPIMode();
     const response = await fetch(
-      `https://api.dinod2.com/v0/emailAll`,
+      `https://api.dinod2.com/${version}/emailAll`,
       {
         method: "POST",
         headers: {

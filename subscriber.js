@@ -13,7 +13,8 @@ const stageDiv = document.getElementById('stage');
 
 // Load subscriber data if editing
 if (subscriberId) {
-    fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`, {
+    const version = getAPIMode();
+    fetch(`https://api.dinod2.com/${version}/subscribers/${encodeURIComponent(subscriberId)}`, {
         method: "GET",
         headers: {
         "Content-Type": "application/json",
@@ -55,19 +56,20 @@ form.addEventListener('submit', async (e) => {
 
   try {
     if (condition === 'Deleted') {
-
-        const response = await fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: token
-            }
-        });
-        if (!response.ok) throw new Error("Failed to delete subscriber");
-        stageDiv.textContent = "✅ Subscriber deleted!";
+      const version = getAPIMode();
+      const response = await fetch(`https://api.dinod2.com/${version}/subscribers/${encodeURIComponent(subscriberId)}`, {
+          method: "DELETE",
+          headers: {
+              "Content-Type": "application/json",
+              Authorization: token
+          }
+      });
+      if (!response.ok) throw new Error("Failed to delete subscriber");
+      stageDiv.textContent = "✅ Subscriber deleted!";
     } else {
+        const version = getAPIMode();
         const response = await fetch(
-            `https://api.dinod2.com/v0/subscribers/${encodeURIComponent(subscriberId)}`,
+            `https://api.dinod2.com/${version}/subscribers/${encodeURIComponent(subscriberId)}`,
             {
             method: "PATCH",
             headers: {

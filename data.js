@@ -1,10 +1,19 @@
 const token = localStorage.getItem("id_token");
 
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    if (!version) {
+        localStorage.setItem("version", "v0");
+        const version = localStorage.getItem("version");
+    }
+    return version;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     if (!token) {
         return null
     }
-
+    getAPIMode();
     getSubscribers();
     getNewsletters();
     populateDropdowns();
@@ -13,10 +22,11 @@ document.addEventListener("DOMContentLoaded", () => {
 async function populateDropdowns() {
     const userDropdown = document.getElementById("userDropdown");
     const newsletterDropdown = document.getElementById("newsletterDropdown");
+    const version = getAPIMode();
     console.log(newsletterDropdown);
     // Populate users
     try {
-        const subRes = await fetch("https://api.dinod2.com/v0/subscribers", {
+        const subRes = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -43,7 +53,7 @@ async function populateDropdowns() {
     }
     // Populate newsletters
     try {
-        const nlRes = await fetch("https://api.dinod2.com/v0/newsletters", {
+        const nlRes = await fetch(`https://api.dinod2.com/${version}/newsletters`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -73,6 +83,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
     const newsletterDropdown = document.getElementById("newsletterDropdown");
     const statusSpan = document.getElementById("sendNewsletterStatus");
     const newsletterId = newsletterDropdown.value;
+    const version = getAPIMode();
     statusSpan.textContent = "";
 
     if (!userDropdown.value || !newsletterId) {
@@ -94,7 +105,7 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
     console.log(userId, recipient);
 
     try {
-        const response = await fetch("https://api.dinod2.com/v0/email", {
+        const response = await fetch(`https://api.dinod2.com/${version}/email`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -118,8 +129,9 @@ document.getElementById("sendNewsletterBtn").addEventListener("click", async () 
 });
 
 async function getSubscribers() {
+    const version = getAPIMode();
     try {
-        const response = await fetch("https://api.dinod2.com/v0/subscribers", {
+        const response = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -184,53 +196,6 @@ function renderSubscribers(subscribers) {
             window.location.href = `subscriber.html?subscriberId=${sub.id}`;
         });
 
-        // button.addEventListener("click", async () => {
-        //     try {
-        //         if (sub.condition == "subscribed") {
-        //             const response = await fetch("https://api.dinod2.com/v0/unsubscribe", {
-        //                 method: "PATCH",
-        //                 headers: {
-        //                 "Content-Type": "application/json",
-        //                 Authorization: token
-        //                 },
-        //                 body: JSON.stringify({ userId: sub.id })
-        //             });
-
-        //             if (response.ok) {
-        //                 sub.condition = "unsubscribed";
-        //                 statusTd.textContent = "Unsubscribed";
-        //                 button.textContent = "Resubscribe";
-        //                 alert(`${sub.emailAddress} unsubscribed successfully`);
-        //             } else {
-        //                 const error = await response.text();
-        //                 alert("Failed to unsubscribe: " + error);
-        //             }
-        //         } else {
-        //             const response = await fetch(`https://api.dinod2.com/v0/subscribers/${encodeURIComponent(sub.id)}`, {
-        //                 method: "PATCH",
-        //                 headers: {
-        //                 "Content-Type": "application/json",
-        //                 Authorization: token
-        //                 },
-        //                 body: JSON.stringify({ "condition": "subscribed" })
-        //             });
-
-        //             if (response.ok) {
-        //                 sub.condition = "subscribed";
-        //                 statusTd.textContent = "Active";
-        //                 button.textContent = "Unsubscribe";
-        //                 alert(`${sub.emailAddress} resubscribed successfully`);
-        //             } else {
-        //                 const error = await response.text();
-        //                 alert("Failed to resubscribe: " + error);
-        //             }
-        //         }
-        //     } catch (err) {
-        //         console.error(err);
-        //         alert("Something went wrong.");
-        //     }
-        //     });
-
             actionTd.appendChild(button);
 
             tr.appendChild(nameTd);
@@ -244,8 +209,9 @@ function renderSubscribers(subscribers) {
 }
 
 async function getNewsletters() {
+    const version = getAPIMode();
     try {
-        const response = await fetch("https://api.dinod2.com/v0/newsletters", {
+        const response = await fetch(`https://api.dinod2.com/${version}/newsletters`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -312,8 +278,9 @@ function renderNewsletters(newsletters) {
 }
 
 document.getElementById("addNewsletter").addEventListener("click", async () => {
+    const version = getAPIMode();
     try {
-        const response = await fetch("https://api.dinod2.com/v0/newsletters", {
+        const response = await fetch(`https://api.dinod2.com/${version}/newsletters`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -344,7 +311,7 @@ document.getElementById("addSubscriber").addEventListener("click", async () => {
             firstName: document.getElementById('firstName').value || ""
         };
 
-        const response = await fetch("https://api.dinod2.com/v0/subscribers", {
+        const response = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
