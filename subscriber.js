@@ -1,9 +1,18 @@
-// Get newsletterId from URL
+// Get subscriberId from URL
 let pendingContent = null;
 
 function getSubscriberId() {
   const params = new URLSearchParams(window.location.search);
   return params.get('subscriberId');
+}
+
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    if (!version) {
+        localStorage.setItem("version", "v0");
+        const version = localStorage.getItem("version");
+    }
+    return version;
 }
 
 const token = localStorage.getItem("id_token");
@@ -87,5 +96,5 @@ form.addEventListener('submit', async (e) => {
 });
 
 document.getElementById('backBtn').onclick = () => {
-  window.location.href = "index.html";
+  window.location.href = "subscribers.html";
 };
