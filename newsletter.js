@@ -173,3 +173,8 @@ addEventListener("trix-initialize", function(event) {
     group: false
   };
 });
+
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    return version;
+}
