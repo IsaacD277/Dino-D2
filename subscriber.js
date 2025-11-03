@@ -1,6 +1,11 @@
 // Get subscriberId from URL
 let pendingContent = null;
 
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    return version;
+}
+
 function getSubscriberId() {
   const params = new URLSearchParams(window.location.search);
   return params.get('subscriberId');
