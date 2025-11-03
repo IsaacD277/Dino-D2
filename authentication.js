@@ -1,9 +1,10 @@
 // === CONFIG ===
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const isDev = window.location.hostname === "dev.dinod2.com";
 const clientId = "5tdln53ivsdiatknmk8arui7nu";
 const domain = "https://auth.dinod2.com";
-const redirectUri = isLocal ? "http://localhost:5500" : "https://app.dinod2.com"; // must match Cognito app settings
-const logoutUri = isLocal ? "http://localhost:5500" : "https://app.dinod2.com"; // must match Cognito app settings
+const redirectUri = isLocal ? "http://localhost:5500" : isDev ? "https://dev.dinod2.com" : "https://app.dinod2.com"; // must match Cognito app settings
+const logoutUri = isLocal ? "http://localhost:5500" : isDev ? "https://dev.dinod2.com" : "https://app.dinod2.com"; // must match Cognito app settings
 const scope = "email+openid+phone"; // must match Cognito app settings // USE '+' for spaces
 const responseType = "token"; // Implicit flow for static sites
 

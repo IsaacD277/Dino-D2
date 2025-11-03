@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>DinoD2</title>
+  <title>Subscribers</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,86 +16,47 @@
 </script>
 </head>
 <body>
-  <!-- Logged-out view -->
-  <div id="loggedOutView">
     <header class="topbar">
-      <div class="topbar-left"></div>
-      <h1>DinoD2</h1>
-      <div class="topbar-right"></div>
-    </header>
-    <div class="message-box">
-      <p>Access Restricted</p>
-      <p>You must be logged in to view the content.</p>
-      <button id="loginBtn" class="login-btn">Please log in to continue</button>
-    </div>
-  </div>
-
-  <div id="loggedInView">
-    <header class="topbar">
-      <div class="topbar-left"></div>
-      <h1>DinoD2</h1>
-      <div class="topbar-right">
+        <div class="topbar-left">
+            <button id="backBtn" class="profile-btn" title="Profile">Dashboard</button>
+        </div>
+        <h1>DinoD2</h1>
+        <div class="topbar-right">
         <button id="profileBtn" class="profile-btn" title="Profile">Profile</button>
         <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
-      </div>
+        </div>
     </header>
 
     <div class="content">
-      <!-- Subscribers Section -->
-      <div class="section">
-        <button id="goToSubscribers">See All Subscribers</button>
-      </div>
-
-      <!-- Newsletters Section -->
-      <div class="section">
-        <div class="section-header">
-          <h3>Newsletters</h3>
-          <button id="addNewsletter">New Newsletter</button>
+    <!-- Subscribers Section -->
+    <div class="section">
+    <h3 id="subscribersHeading">Subscribers</h3>
+    <div class="form-group">
+        <div class="input-wrapper">
+        <input type="text" id="firstName" placeholder="First Name" required autocomplete="given-name">
         </div>
-        <div class="table-wrapper">
-          <table id="newslettersTable">
-            <thead>
-              <tr>
-                <th>Subject</th>
-                <th>Preview</th>
-                <th>Stage</th>
-                <th>Send Date</th>
-                <th>Edit</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td colspan="5" style="text-align: center; color: #718096;">No newsletters yet.</td></tr>
-            </tbody>
-          </table>
+        <div class="input-wrapper">
+        <input type="email" id="emailAddress" placeholder="Email Address" required autocomplete="email">
         </div>
-      </div>
-
-      <!-- Send Newsletter Section -->
-      <div class="section">
-        <h3>Send Test Newsletter</h3>
-        <div class="send-newsletter-form">
-          <div>
-            <label for="userDropdown">Select Active User:</label>
-            <select id="userDropdown">
-              <option value="">Loading...</option>
-            </select>
-          </div>
-          <div>
-            <label for="newsletterDropdown">Select Newsletter:</label>
-            <select id="newsletterDropdown">
-              <option value="">Loading...</option>
-            </select>
-          </div>
-          <div>
-            <button id="sendNewsletterBtn">Send Newsletter</button>
-            <span id="sendNewsletterStatus"></span>
-          </div>
-        </div>
-      </div>
+        <button id="addSubscriber">Add Subscriber</button>
     </div>
-  </div>
-
-  <script src="authentication.js"></script>
-  <script src="data.js"></script>
+    <div class="table-wrapper">
+        <table id="subscribersTable">
+        <thead>
+            <tr>
+            <th>First Name</th>
+            <th>Email Address</th>
+            <th>Joined</th>
+            <th>Status</th>
+            <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="5" style="text-align: center; color: #718096;">No subscribers yet.</td></tr>
+        </tbody>
+        </table>
+    </div>
+    </div>
+  <script src="subscribers.js"></script>
 </body>
 </html>

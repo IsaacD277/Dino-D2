@@ -1,80 +1,33 @@
-// Get newsletterId from URL
+// #region INITIALIZE
+// Initial values set
 let trixInitialized = false;
-let pendingContent = null;
+let newsletterData = null;
+let newsletter = null;
+let form;
+let stageDiv;
+let sendDiv;
 
-addEventListener("trix-initialize", function(event) {
-  trixInitialized = true;
-  if (pendingContent !== null) {
-    document.getElementById('content').value = pendingContent;
-    document.getElementById('content').dispatchEvent(new Event('input', { bubbles: true }));
-    pendingContent = null;
-  }
-  const { config } = Trix;
-  // Add heading2
-  config.blockAttributes.heading2 = {
-    tagName: "h2",
-    terminal: true,
-    breakOnReturn: true,
-    group: false
-  };
-});
-  
-function setTrixContentIfReady() {
-  if (trixInitialized && pendingContent !== null) {
-    const trixEditor = document.querySelector('trix-editor');
-    if (trixEditor) {
-      trixEditor.editor.loadHTML(pendingContent);
-    }
-    pendingContent = null;
-  }
+// Allows for production and development switching
+const version = getAPIMode();
+
+// Grabs auth token
+const token = localStorage.getItem("id_token");
+
+// Pulls newsletterId from the url
+const newsletterId = getNewsletterId();
+
+// #endregion
+
+// #region FUNCTIONS
+function getAPIMode() {
+    const version = localStorage.getItem("version");
+    return version;
 }
 
 function getNewsletterId() {
   const params = new URLSearchParams(window.location.search);
   return params.get('newsletterId');
 }
-
-const token = localStorage.getItem("id_token");
-const newsletterId = getNewsletterId();
-const form = document.getElementById('newsletterForm');
-const stageDiv = document.getElementById('stage');
-const sendDiv = document.getElementById('send');
-
-// Load newsletter data if editing
-if (newsletterId) {
-    const version = getAPIMode();
-    fetch(`https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`, {
-        method: "GET",
-        headers: {
-        "Content-Type": "application/json",
-        Authorization: token
-        }
-    })
-  .then(res => {
-    if (!res.ok) throw new Error("Failed to load newsletter");
-    return res.json();
-  })
-  .then(data => {
-    document.getElementById('subject').value = data.subject || "";
-    document.getElementById('preview').value = data.preview || "";
-    pendingContent = data.content || "";
-      setTrixContentIfReady();
-    document.getElementById('stageDropdown').value = data.stage || "Draft";
-    document.getElementById('sendDate').value = data.sendDate || "";
-    document.getElementById('pageTitle').textContent = "Edit Newsletter";
-  })
-  .catch(err => {
-    stageDiv.textContent = "Could not load newsletter: " + err.message;
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    if (!token) {
-        return null
-    }
-
-    getStats();
-});
 
 function getStats() {
     const version = getAPIMode();
@@ -100,17 +53,80 @@ function getStats() {
     });
 }
 
-// Save newsletter (update)
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+async function loadNewsletterData(newsletterId) {
+  try {
+    const response = await fetch(`https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token
+      }
+    });
+
+    if (!response.ok) throw new Error(`Failed to load newsletter: ${response.status}`);
+
+    const newsletter = await response.json();
+    console.log(newsletter);
+
+  setNewsletterDetails(newsletter);
+
+  return newsletter
+  } catch (err) {
+    console.error("Error loading newsletter:", err);
+    return null;
+  }
+}
+
+function setNewsletterDetails(newsletter) {
+  document.getElementById('subject').value = newsletter.subject || "";
+  document.getElementById('preview').value = newsletter.preview || "";
+  newsletterData = newsletter.content || "";
+  document.getElementById('stageDropdown').value = newsletter.stage || "Draft";
+  document.getElementById('sendDate').value = newsletter.sendDate || "";
+  document.getElementById('pageTitle').textContent = "Edit Newsletter";
+
+  if (trixInitialized) {
+    loadTrixContent(newsletterData);
+  }
+}
+
+async function loadNewsletter() {
+  // If Trix already ready, load immediately
+  if (trixInitialized) {
+    loadTrixContent(data.content);
+  }
+}
+
+function loadTrixContent(data) {
+  const editor = document.querySelector("trix-editor");
+  if (editor) editor.editor.loadHTML(data || "");
+}
+
+function handleTrixInitialize(event) {
+    trixInitialized = true;
+    console.log("TRIX INITIALIZE (handler)");
+    // If data already fetched, load it now
+    if (newsletterData) {
+      loadTrixContent(newsletterData);
+    }
+}
+
+async function handleFormSubmit(event) {
+  event.preventDefault();
   stageDiv.textContent = "";
 
+  subject = document.getElementById('subject').value || "";
+  preview = document.getElementById('preview').value || "";
+  content = document.getElementById('content').value || "";
+  stage = document.getElementById('stageDropdown').value || "";
+  sendDate = document.getElementById('sendDate').value || ""
+
   const payload = {
-    subject: document.getElementById('subject').value || "",
-    preview: document.getElementById('preview').value || "",
-    content: document.getElementById('content').value || "",
-    stage: document.getElementById('stageDropdown').value || "",
-    sendDate: document.getElementById('sendDate').value || ""
+    subject: subject,
+    preview: preview,
+    content: content,
+    stage: stage,
+    sendDate: sendDate
   };
 
   try {
@@ -127,12 +143,46 @@ form.addEventListener('submit', async (e) => {
       }
     );
     if (!response.ok) throw new Error("Failed to save newsletter");
-    stageDiv.textContent = "✅ Newsletter saved!";
+    stageDiv.textContent = "Newsletter saved!";
+
+    // Update local variable
+    Object.assign(newsletter, payload);
   } catch (err) {
-    stageDiv.textContent = "❌ " + err.message;
+    stageDiv.textContent = err.message;
   }
+}
+// #endregion
+
+// #region EVENT LISTENERS
+addEventListener("trix-initialize", handleTrixInitialize);
+
+document.addEventListener("DOMContentLoaded", async () => {
+    if (!token) {
+        return null
+    }
+
+    form = document.getElementById('newsletterForm');
+    stageDiv = document.getElementById('stage');
+    sendDiv = document.getElementById('send');
+
+    newsletter = await loadNewsletterData(newsletterId);
+
+    getStats();
+
+    if (form) {
+      form.addEventListener("submit", handleFormSubmit);
+    }
+
+    const existingEditor = document.querySelector("trix-editor");
+    if (existingEditor && existingEditor.editor) {
+        // simulate event.target if your handler needs it
+        handleTrixInitialize({ target: existingEditor });
+    }
 });
 
+// #endregion
+
+// #region BUTTONS
 document.getElementById('backBtn').onclick = () => {
   window.location.href = "index.html";
 };
@@ -143,6 +193,10 @@ document.getElementById('sendAllBtn').onclick = async () => {
   };
 
   try {
+    if (newsletter.stage !== "Ready") {
+      throw new Error("Please make sure newsletter is in \"Ready\" status");
+    }
+
     const version = getAPIMode();
     const response = await fetch(
       `https://api.dinod2.com/${version}/emailAll`,
@@ -156,25 +210,10 @@ document.getElementById('sendAllBtn').onclick = async () => {
       }
     );
     if (!response.ok) throw new Error("Failed to send newsletter to all subscribers");
-    sendDiv.textContent = "✅ Newsletter sent to all subscribers!";
+    sendDiv.textContent = "Newsletter sent to all subscribers!";
   } catch (err) {
-    sendDiv.textContent = "❌ " + err.message;
+    sendDiv.textContent = err.message;
   }
 }
 
-addEventListener("trix-initialize", function(event) {
-  const { config } = Trix;
-
-  // Add heading2
-  config.blockAttributes.heading2 = {
-    tagName: "h2",
-    terminal: true,
-    breakOnReturn: true,
-    group: false
-  };
-});
-
-function getAPIMode() {
-    const version = localStorage.getItem("version");
-    return version;
-}
+// #endregion
