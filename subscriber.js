@@ -61,7 +61,6 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   stageDiv.textContent = "";
   const condition = document.getElementById('conditionDropdown').value;
-    console.log("Condition:", condition);
   const payload = {
     emailAddress: document.getElementById('emailAddress').value || "",
     firstName: document.getElementById('firstName').value || "",

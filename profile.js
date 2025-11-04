@@ -127,9 +127,7 @@ function initAPIMode() {
 
 function setAPIMode() {
     const apiCheckbox = document.getElementById("apiSelector");
-    console.log(`API Checkbox` + {apiCheckbox});
     const apiMode = apiCheckbox.checked ? 'development' : 'v0';
-    console.log(`Dev mode` + {apiMode});
     localStorage.setItem("version", apiMode);
 }
 
@@ -141,6 +139,5 @@ function getAPIMode() {
 const apiCheckbox = document.getElementById("apiSelector");
 if (apiCheckbox) {
     apiCheckbox.addEventListener('change', setAPIMode);
-    console.log("Happened here")
     initAPIMode();
 }

@@ -22,7 +22,6 @@ async function populateDropdowns() {
     const userDropdown = document.getElementById("userDropdown");
     const newsletterDropdown = document.getElementById("newsletterDropdown");
     const version = getAPIMode();
-    console.log(newsletterDropdown);
     // Populate users
     try {
         const subRes = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
@@ -143,7 +142,6 @@ async function getSubscribers() {
         }
 
         const subscribers = await response.json();
-        console.log(subscribers)
         renderSubscribers(subscribers)
     } catch (error) {
         console.error("Error fetching subscribers:", error);
@@ -223,7 +221,6 @@ async function getNewsletters() {
         }
 
         const newsletters = await response.json();
-        console.log(newsletters)
         renderNewsletters(newsletters)
     } catch (error) {
         console.error("Error fetching newsletters:", error);

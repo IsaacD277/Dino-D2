@@ -44,7 +44,6 @@ function getStats() {
     })
     .then(data => {
         // Handle stats data here
-        console.log(data);
         document.getElementById('sendCount').textContent = data.sent || "0";
         document.getElementById('openRate').textContent = data.openRate ? (data.openRate) + "%" : "0%";
     })
@@ -66,7 +65,6 @@ async function loadNewsletterData(newsletterId) {
     if (!response.ok) throw new Error(`Failed to load newsletter: ${response.status}`);
 
     const newsletter = await response.json();
-    console.log(newsletter);
 
   setNewsletterDetails(newsletter);
 
@@ -104,7 +102,6 @@ function loadTrixContent(data) {
 
 function handleTrixInitialize(event) {
     trixInitialized = true;
-    console.log("TRIX INITIALIZE (handler)");
     // If data already fetched, load it now
     if (newsletterData) {
       loadTrixContent(newsletterData);
