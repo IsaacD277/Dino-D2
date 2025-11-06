@@ -1,77 +1,108 @@
-// === CONFIG ===
+// #region INITIALIZE
+// Set variables
+let authResolved = false;
+const authReady = new CustomEvent("authReady", {
+    detail: {
+        valid: true,
+    },
+});
+const authNotReady = new CustomEvent("authReady", {
+    detail: {
+        valid: false,
+    },
+});
+
 const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
 const isDev = window.location.hostname === "dev.dinod2.com";
 const clientId = "7tdooqkb19uncgla4rvu4922dp";
 const domain = "https://auth.dinod2.com";
 const redirectUri = isLocal ? "http://localhost:5500" : isDev ? "https://dev.dinod2.com" : "https://app.dinod2.com"; // must match Cognito app settings
 const logoutUri = isLocal ? "http://localhost:5500" : isDev ? "https://dev.dinod2.com" : "https://app.dinod2.com"; // must match Cognito app settings
-const scope = "email+openid+phone"; // must match Cognito app settings // USE '+' for spaces
+const scope = "aws.cognito.signin.user.admin+email+openid+phone"; // must match Cognito app settings // USE '+' for spaces
 const responseType = "code"; // Implicit flow for static sites
 
-// === PARSE TOKEN FROM URL AFTER LOGIN ===
-function parseHash() {
-    console.log("Parse Hash");
+// Run on page load
+parseUrl();
+//checkAuthStatus();
+
+// Requires a small delay or else receives 400 "invalid_grant" errors
+setTimeout(() => {
+    checkAuthStatus();
+}, 50);
+
+
+// #endregion
+
+// #region FUNCTIONS
+
+// Pull Login Code from URL after signin
+function parseUrl() {
     if (window.location.search) {
-        console.log("Found search");
-        const hash = window.location.search.substring(1);
-        const params = new URLSearchParams(hash);
+        const search = window.location.search.substring(1);
+        const params = new URLSearchParams(search);
         const loginCode = params.get("code");
-        console.log("Login: " + loginCode);
         if (loginCode) {
             localStorage.setItem("loginCode", loginCode);
             window.location.search = ""; // clean URL
         }
     }
-
-    showStatus()
 }
 
-// === CHECK LOGIN STATUS ===
-async function isLoggedIn() {
-    const loginCode = localStorage.getItem("loginCode");
-    console.log("Login Code: " + loginCode);
+function setAuthStatus(status = false) {
+    console.log("Setting the auth status");
+    if (!authResolved) {
+        authResolved = true;
+        if (status) {
+            window.dispatchEvent(authReady);
+        } else {
+            window.dispatchEvent(authNotReady);
+        }
+    }
+}
+
+async function checkAuthStatus() {
+    // Gather local variables
     const idToken = localStorage.getItem("id_token") || null;
     console.log("ID Token: " + idToken);
-    const expiration = localStorage.getItem("expires");
-    console.log("Expiration: " + expiration);
-    const currentDate = Math.floor(Date.now() / 1000);
-    console.log("Current Date: " + currentDate);
 
+    // If there is not a token, ask Cognito for one
     if (idToken === undefined || idToken === null) {
-        console.log("Running getToken");
-        const hasToken = await getToken(loginCode);
+        const hasToken = await getToken();
         console.log("Has Token: " + hasToken);
-
-        return hasToken;
+        setAuthStatus(hasToken);
+        return;
     }
 
-    if (expiration < currentDate) {
+    const expiration = localStorage.getItem("expires");
+    console.log("Expiration: " + expiration);
+    const requested = localStorage.getItem("requested");
+    console.log("Requested: " + requested);
+    const currentDate = Math.floor(Date.now() / 1000); // Date.now() returns milliseconds, expiration is in seconds
+    console.log("Current Date: " + currentDate);
+
+    if (((expiration - requested) * 0.75) + parseInt(requested) < currentDate) {
         console.log("Running refreshToken");
         const theRefreshToken = localStorage.getItem("refresh_token");
         const refreshed = await refreshToken(theRefreshToken);
-
-        return refreshed;
+        setAuthStatus(refreshed);
+        return;
     }
 
-    return true;
+    setAuthStatus(true);
+    return;
 }
 
-async function showStatus() {
-    console.log("Show Status");
-    const loggedIn = await isLoggedIn();
-
-    document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
-    document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
-}
-
-document.getElementById("loginBtn").onclick = () => {
-    const theUrl = `${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
-    window.location.assign(theUrl);
-};
-
-async function getToken(loginCode) {
-    // localStorage.removeItem("loginCode")
+async function getToken() {
+    const authorizationCode = localStorage.getItem("loginCode");
+    // localStorage.removeItem("loginCode") // Might add this back in to prevent "invalid_grant" errors
+    if (!authorizationCode) {
+        console.warn("No authorization code available to exchange.");
+        return false;
+    }
     console.log("Getting Tokens");
+    console.log("ClientID: " + clientId);
+    console.log("RedirectUri: " + redirectUri);
+    console.log("authorizationCode: " + authorizationCode);
     try {
         const response = await fetch(`${domain}/oauth2/token`, {
             method: 'POST',
@@ -82,15 +113,19 @@ async function getToken(loginCode) {
             body: new URLSearchParams({
                 'grant_type': 'authorization_code',
                 'client_id': clientId,
-                'redirect_uri': 'http://localhost:5500',
-                'code': loginCode
+                'redirect_uri': redirectUri,
+                'code': authorizationCode
             })
         });
 
-        if (!response.ok) throw new Error(`Failed to get token: ${response.status}`);
+        console.log("Made the call");
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Failed to get token: ${response.status} ${text}`);
+        }
 
         const tokens = await response.json();
-        console.log(tokens);
         const date = Math.floor(Date.now() / 1000);
 
         if (tokens) {
@@ -100,17 +135,22 @@ async function getToken(loginCode) {
             localStorage.setItem("requested", date);
             localStorage.setItem("expires", date + tokens.expires_in);
             localStorage.setItem("token_type", tokens.token_type);
+
+            localStorage.removeItem("loginCode");
         }
 
         return true;
     } catch (e) {
         console.error(e);
-
         return false;
     }
 }
 
 async function refreshToken(refreshToken) {
+    if (!refreshToken) {
+        console.warn("No refresh token available.");
+        return false;
+    }
     console.log("Refreshing Tokens");
     try {
         const response = await fetch(`${domain}/oauth2/token`, {
@@ -126,7 +166,10 @@ async function refreshToken(refreshToken) {
             })
         });
 
-        if (!response.ok) throw new Error(`Failed to refresh token: ${response.status}`);
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`Failed to refresh token: ${response.status} ${text}`);
+        }
 
         const tokens = await response.json();
 
@@ -141,15 +184,31 @@ async function refreshToken(refreshToken) {
         return true;
     } catch (e) {
         console.error(e);
-
         return false;
     }
 }
 
+// #endregion
+
+// #region EVENT LISTENERS
+
+// #endregion
+
+// #region BUTTONS
+// Login Button
+document.getElementById("loginBtn").onclick = () => {
+    const theUrl = `${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
+    window.location.assign(theUrl);
+};
+
+// Logout Button
 document.getElementById("logoutBtn").onclick = () => {
     localStorage.clear();
     window.location.href = `${domain}/logout?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
 };
 
-// Run on page load
-parseHash();
+document.getElementById("profileBtn").addEventListener("click", () => {
+    window.location.href = `profile.html`;
+});
+
+// #endregion

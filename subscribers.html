@@ -16,6 +16,29 @@
 </script>
 </head>
 <body>
+  <!-- Logged-out view -->
+  <div id="loggedOutView">
+    <header class="topbar">
+      <div class="topbar-left"></div>
+      <h1>DinoD2</h1>
+      <div class="topbar-right"></div>
+    </header>
+    <div class="message-box">
+      <p>Access Restricted</p>
+      <p>You must be logged in to view the content.</p>
+      <button id="loginBtn" class="login-btn">Please log in to continue</button>
+    </div>
+  </div>
+
+  <div id="loggedInView">
+    <header class="topbar">
+      <div class="topbar-left"></div>
+      <h1>DinoD2</h1>
+      <div class="topbar-right">
+        <button id="profileBtn" class="profile-btn" title="Profile">Profile</button>
+        <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
+      </div>
+    </header>
     <header class="topbar">
         <div class="topbar-left">
             <button id="backBtn" class="profile-btn" title="Profile">Dashboard</button>
@@ -57,6 +80,7 @@
         </table>
     </div>
     </div>
+  <script src="authentication.js"></script>
   <script src="subscribers.js"></script>
 </body>
 </html>

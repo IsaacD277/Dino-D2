@@ -19,60 +19,86 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <h1 id="pageTitle">Create/Edit Newsletter</h1>
-    
-    <div class="stats">
-      <p>Sends: <span id="sendCount">0</span></p>
-      <p>Open Rate: <span id="openRate">0%</span></p>
+  <!-- Logged-out view -->
+  <div id="loggedOutView">
+    <header class="topbar">
+      <div class="topbar-left"></div>
+      <h1>DinoD2</h1>
+      <div class="topbar-right"></div>
+    </header>
+    <div class="message-box">
+      <p>Access Restricted</p>
+      <p>You must be logged in to view the content.</p>
+      <button id="loginBtn" class="login-btn">Please log in to continue</button>
     </div>
-
-    <form id="newsletterForm">
-      <label>
-        Subject:
-        <input type="text" id="subject" name="subject" placeholder="Enter newsletter subject" required>
-      </label>
-
-      <label>
-        Preview Text:
-        <input type="text" id="preview" name="preview" placeholder="Short preview text that appears in email clients">
-      </label>
-
-      <label for="content">Newsletter Content:</label>
-      <input id="content" type="hidden" name="content">
-      <trix-editor input="content"></trix-editor>
-
-      <div class="metadata-section">
-        <h3>Newsletter Settings</h3>
-        <div class="inline-fields">
-          <label>
-            Stage:
-            <select id="stageDropdown" name="stage" class="third-width" required>
-              <option value="Draft">Draft</option>
-              <option value="Ready">Ready</option>
-              <option value="Sent">Sent</option>
-            </select>
-          </label>
-
-          <label>
-            Send Date:
-            <input type="date" id="sendDate" name="sendDate" class="third-width">
-          </label>
-        </div>
-      </div>
-
-      <button type="submit">Save Newsletter</button>
-    </form>
-
-    <div class="action-buttons">
-      <button id="sendAllBtn">Send to All Subscribers</button>
-      <button id="backBtn">← Back to Dashboard</button>
-    </div>
-
-    <div id="send"></div>
-    <div id="stage"></div>
   </div>
 
+  <div id="loggedInView">
+    <header class="topbar">
+      <div class="topbar-left"></div>
+      <h1>DinoD2</h1>
+      <div class="topbar-right">
+        <button id="profileBtn" class="profile-btn" title="Profile">Profile</button>
+        <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
+      </div>
+    </header>
+    
+    <div class="container">
+      <h1 id="pageTitle">Create/Edit Newsletter</h1>
+      
+      <div class="stats">
+        <p>Sends: <span id="sendCount">0</span></p>
+        <p>Open Rate: <span id="openRate">0%</span></p>
+      </div>
+
+      <form id="newsletterForm">
+        <label>
+          Subject:
+          <input type="text" id="subject" name="subject" placeholder="Enter newsletter subject" required>
+        </label>
+
+        <label>
+          Preview Text:
+          <input type="text" id="preview" name="preview" placeholder="Short preview text that appears in email clients">
+        </label>
+
+        <label for="content">Newsletter Content:</label>
+        <input id="content" type="hidden" name="content">
+        <trix-editor input="content"></trix-editor>
+
+        <div class="metadata-section">
+          <h3>Newsletter Settings</h3>
+          <div class="inline-fields">
+            <label>
+              Stage:
+              <select id="stageDropdown" name="stage" class="third-width" required>
+                <option value="Draft">Draft</option>
+                <option value="Ready">Ready</option>
+                <option value="Sent">Sent</option>
+              </select>
+            </label>
+
+            <label>
+              Send Date:
+              <input type="date" id="sendDate" name="sendDate" class="third-width">
+            </label>
+          </div>
+        </div>
+
+        <button type="submit">Save Newsletter</button>
+      </form>
+
+      <div class="action-buttons">
+        <button id="sendAllBtn">Send to All Subscribers</button>
+        <button id="backBtn">← Back to Dashboard</button>
+      </div>
+
+      <div id="send"></div>
+      <div id="stage"></div>
+    </div>
+  </div>
+
+  <script src="authentication.js"></script>
   <script src="newsletter.js"></script>
 </body>
 </html>

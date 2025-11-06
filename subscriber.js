@@ -56,6 +56,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+window.addEventListener("authReady", async (e) => {
+    const loggedIn = e.detail.valid;
+    console.log("The custom event was received.");
+    if (loggedIn) {
+        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+        token = localStorage.getItem("id_token");
+        if (!token) {
+            console.warn("No id_token found after auth ready.");
+            return null;
+        }
+        console.log("Token: " + token);
+    }
+});
+
 // Save subscriber (update)
 form.addEventListener('submit', async (e) => {
   e.preventDefault();

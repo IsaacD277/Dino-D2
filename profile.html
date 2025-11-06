@@ -15,88 +15,114 @@
   </script>
 </head>
 <body>
-  <div class="container">
-    <h1 id="pageTitle">Profile</h1>
-
-    <form id="profileForm">
-      <!-- Editable Fields -->
-      <label>
-        Newsletter Name:
-        <input type="text" id="newsletterName" name="newsletterName" placeholder="Enter your newsletter name">
-      </label>
-
-      <label>
-        Business Address:
-        <input type="text" id="businessAddress" name="businessAddress" placeholder="123 Main St, City, State">
-      </label>
-
-      <label>
-        Domain:
-        <input type="text" id="domain" name="domain" placeholder="yourdomain.com">
-      </label>
-
-      <label>
-        Owner Name:
-        <input type="text" id="owner" name="owner" placeholder="John Doe">
-      </label>
-
-      <label>
-        Reply-To Email Address:
-        <input type="text" id="replyToEmail" name="replyToEmail" placeholder="reply@example.com">
-      </label>
-
-      <label>
-        Sender Name:
-        <input type="text" id="senderName" name="senderName" placeholder="Newsletter Team">
-      </label>
-
-      <label>
-        Sender Email Address:
-        <input type="email" id="senderEmail" name="senderEmail" placeholder="newsletter@dinod2.com">
-      </label>
-
-      <!-- Read-only Information -->
-      <div class="readonly-section">
-        <h2>Account Information</h2>
-
-        <label>
-          Owner Email Address:
-          <input type="email" id="ownerEmail" name="ownerEmail" readonly>
-        </label>
-        
-        <label>
-          Joined:
-          <input type="text" id="createdAt" name="joined" readonly>
-        </label>
-
-        <label>
-          Max Subscribers:
-          <input type="text" id="maxSubscribers" name="maxSubscribers" readonly>
-        </label>
-
-        <label>
-          Plan:
-          <input type="text" id="plan" name="plan" readonly>
-        </label>
-      </div>
-
-      <button type="submit">Save Changes</button>
-    </form>    
-
-    <button id="backBtn">← Back to Dashboard</button>
-    <div id="stage"></div>
+  <!-- Logged-out view -->
+  <div id="loggedOutView">
+    <header class="topbar">
+      <div class="topbar-left"></div>
+      <h1>DinoD2</h1>
+      <div class="topbar-right"></div>
+    </header>
+    <div class="message-box">
+      <p>Access Restricted</p>
+      <p>You must be logged in to view the content.</p>
+      <button id="loginBtn" class="login-btn">Please log in to continue</button>
+    </div>
   </div>
 
-  <div>
-    <button id="getSubscribeToken">Get Subscribe Token</button>
+  <div id="loggedInView">
+    <header class="topbar">
+        <div class="topbar-left">
+            <button id="backBtn" class="profile-btn" title="Dashboard">Dashboard</button>
+        </div>
+        <h1>DinoD2</h1>
+        <div class="topbar-right">
+        <button id="profileBtn" class="profile-btn" title="Profile">Profile</button>
+        <button id="logoutBtn" class="logout-btn" title="Logout">Logout</button>
+        </div>
+    </header>
+    
+    <div class="container">
+      <h1 id="pageTitle">Profile</h1>
+      <div class="section">
+        <form id="profileForm">
+          <!-- Editable Fields -->
+          <label>
+            Newsletter Name:
+            <input type="text" id="newsletterName" name="newsletterName" placeholder="Enter your newsletter name">
+          </label>
+
+          <label>
+            Business Address:
+            <input type="text" id="businessAddress" name="businessAddress" placeholder="123 Main St, City, State">
+          </label>
+
+          <label>
+            Domain:
+            <input type="text" id="domain" name="domain" placeholder="yourdomain.com">
+          </label>
+
+          <label>
+            Owner Name:
+            <input type="text" id="owner" name="owner" placeholder="John Doe">
+          </label>
+
+          <label>
+            Reply-To Email Address:
+            <input type="text" id="replyToEmail" name="replyToEmail" placeholder="reply@example.com">
+          </label>
+
+          <label>
+            Sender Name:
+            <input type="text" id="senderName" name="senderName" placeholder="Newsletter Team">
+          </label>
+
+          <label>
+            Sender Email Address:
+            <input type="email" id="senderEmail" name="senderEmail" placeholder="newsletter@dinod2.com">
+          </label>
+
+          <!-- Read-only Information -->
+          <div class="readonly-section">
+            <h2>Account Information</h2>
+
+            <label>
+              Owner Email Address:
+              <input type="email" id="ownerEmail" name="ownerEmail" readonly>
+            </label>
+            
+            <label>
+              Joined:
+              <input type="text" id="createdAt" name="joined" readonly>
+            </label>
+
+            <label>
+              Max Subscribers:
+              <input type="text" id="maxSubscribers" name="maxSubscribers" readonly>
+            </label>
+
+            <label>
+              Plan:
+              <input type="text" id="plan" name="plan" readonly>
+            </label>
+          </div>
+
+          <button type="submit">Save Changes</button>
+        </form>
+      </div>  
+      <div id="stage"></div>
+    </div>
+
+    <div>
+      <button id="getSubscribeToken">Get Subscribe Token</button>
+    </div>
+
+    <div>
+      <span>Dev Mode</span>
+      <input type="checkbox" id="apiSelector">
+    </div>
   </div>
 
-  <div>
-    <span>Dev Mode</span>
-    <input type="checkbox" id="apiSelector">
-  </div>
-
-
+  <script src="authentication.js"></script>
   <script src="profile.js"></script>
 </body>
 </html>

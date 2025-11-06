@@ -1,22 +1,37 @@
-const token = localStorage.getItem("id_token");
+let token = null;
 
 function getAPIMode() {
     const version = localStorage.getItem("version");
     if (!version) {
-        localStorage.setItem("version", "v0");
+        localStorage.setItem("version", "v0"); // "v0"
         const version = localStorage.getItem("version");
     }
     return version;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (!token) {
-        return null
-    }
-    getAPIMode();
-    getNewsletters();
-    populateDropdowns();
+document.addEventListener("DOMContentLoaded", async () => {
+    // I don't even know if I need this.
 });
+
+window.addEventListener("authReady", async (e) => {
+    const loggedIn = e.detail.valid;
+    console.log("The custom event was received.");
+    if (loggedIn) {
+        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+        token = localStorage.getItem("id_token");
+        if (!token) {
+            console.warn("No id_token found after auth ready.");
+            return null;
+        }
+        console.log("Token: " + token);
+        getAPIMode();
+        getNewsletters();
+        populateDropdowns();
+    }
+});
+
+
 // --- Dropdown population and send logic ---
 async function populateDropdowns() {
     const userDropdown = document.getElementById("userDropdown");
@@ -298,10 +313,6 @@ document.getElementById("addNewsletter").addEventListener("click", async () => {
         console.error(error);
         return null
     }
-});
-
-document.getElementById("profileBtn").addEventListener("click", () => {
-    window.location.href = `profile.html`;
 });
 
 document.getElementById("goToSubscribers").addEventListener("click", () => {

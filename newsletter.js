@@ -10,9 +10,6 @@ let sendDiv;
 // Allows for production and development switching
 const version = getAPIMode();
 
-// Grabs auth token
-const token = localStorage.getItem("id_token");
-
 // Pulls newsletterId from the url
 const newsletterId = getNewsletterId();
 
@@ -153,29 +150,65 @@ async function handleFormSubmit(event) {
 // #region EVENT LISTENERS
 addEventListener("trix-initialize", handleTrixInitialize);
 
-document.addEventListener("DOMContentLoaded", async () => {
-    if (!token) {
-        return null
-    }
+window.addEventListener("authReady", async (e) => {
+    const loggedIn = e.detail.valid;
+    console.log("The custom event was received.");
+    if (loggedIn) {
+        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+        token = localStorage.getItem("id_token");
+        if (!token) {
+            console.warn("No id_token found after auth ready.");
+            return null;
+        }
 
-    form = document.getElementById('newsletterForm');
-    stageDiv = document.getElementById('stage');
-    sendDiv = document.getElementById('send');
+        form = document.getElementById('newsletterForm');
+        stageDiv = document.getElementById('stage');
+        sendDiv = document.getElementById('send');
 
-    newsletter = await loadNewsletterData(newsletterId);
+        newsletter = await loadNewsletterData(newsletterId);
 
-    getStats();
+        getStats();
 
-    if (form) {
-      form.addEventListener("submit", handleFormSubmit);
-    }
+        if (form) {
+          form.addEventListener("submit", handleFormSubmit);
+        }
 
-    const existingEditor = document.querySelector("trix-editor");
-    if (existingEditor && existingEditor.editor) {
-        // simulate event.target if your handler needs it
-        handleTrixInitialize({ target: existingEditor });
+        const existingEditor = document.querySelector("trix-editor");
+        if (existingEditor && existingEditor.editor) {
+            // simulate event.target if your handler needs it
+            handleTrixInitialize({ target: existingEditor });
+        }
     }
 });
+
+document.addEventListener("DOMContentLoaded", async () => {
+    
+});
+
+// document.addEventListener("DOMContentLoaded", async () => {
+//     if (!token) {
+//         return null
+//     }
+
+//     form = document.getElementById('newsletterForm');
+//     stageDiv = document.getElementById('stage');
+//     sendDiv = document.getElementById('send');
+
+//     newsletter = await loadNewsletterData(newsletterId);
+
+//     getStats();
+
+//     if (form) {
+//       form.addEventListener("submit", handleFormSubmit);
+//     }
+
+//     const existingEditor = document.querySelector("trix-editor");
+//     if (existingEditor && existingEditor.editor) {
+//         // simulate event.target if your handler needs it
+//         handleTrixInitialize({ target: existingEditor });
+//     }
+// });
 
 // #endregion
 

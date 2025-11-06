@@ -9,6 +9,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const subscribers = getSubscribers();
 });
 
+window.addEventListener("authReady", async (e) => {
+    const loggedIn = e.detail.valid;
+    console.log("The custom event was received.");
+    if (loggedIn) {
+        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+        const token = localStorage.getItem("id_token");
+        if (!token) {
+            console.warn("No id_token found after auth ready.");
+            return null;
+        }
+        console.log("Token: " + token);
+        getAPIMode();
+        getSubscribers();
+    }
+});
+
 function getAPIMode() {
     const version = localStorage.getItem("version");
     if (!version) {
