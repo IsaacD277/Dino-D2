@@ -223,7 +223,7 @@ window.addEventListener("retryAuth", async (e) => {
 document.getElementById("loginBtn").onclick = () => {
     localStorage.clear();
     const theUrl = `${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
-    // window.location.assign(theUrl);
+    window.location.assign(theUrl);
 };
 
 // Logout Button
