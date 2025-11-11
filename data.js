@@ -125,7 +125,6 @@ window.addEventListener("authReady", async (e) => {
         }
         getAPIMode();
         getNewsletters();
-        populateDropdowns();
     }
 });
 
