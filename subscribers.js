@@ -1,31 +1,10 @@
-const token = localStorage.getItem("id_token");
+//#region INITIALIZE
+let authRetried = false;
+const form = document.getElementById("addaSubscriber");
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (!token) {
-        return null
-    }
-    getAPIMode();
+//#endregion
 
-    const subscribers = getSubscribers();
-});
-
-window.addEventListener("authReady", async (e) => {
-    const loggedIn = e.detail.valid;
-    console.log("The custom event was received.");
-    if (loggedIn) {
-        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
-        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
-        const token = localStorage.getItem("id_token");
-        if (!token) {
-            console.warn("No id_token found after auth ready.");
-            return null;
-        }
-        console.log("Token: " + token);
-        getAPIMode();
-        getSubscribers();
-    }
-});
-
+//#region FUNCTIONS
 function getAPIMode() {
     const version = localStorage.getItem("version");
     if (!version) {
@@ -35,8 +14,32 @@ function getAPIMode() {
     return version;
 }
 
+function retry() {
+    if (!authRetried) {
+        authRetried = true;
+        const retryAuth = new CustomEvent("retryAuth", {
+            detail: {
+                retried: true,
+            },
+        });
+
+        window.dispatchEvent(retryAuth);
+    };
+}
+
+function compare( a, b ) {
+  if ( a.created < b.created ){
+    return 1;
+  }
+  if ( a.created > b.created ){
+    return -1;
+  }
+  return 0;
+}
+
 async function getSubscribers() {
     const version = getAPIMode();
+    token = localStorage.getItem("id_token")
     try {
         const response = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
             method: "GET",
@@ -46,14 +49,16 @@ async function getSubscribers() {
             }
         });
 
-        if (!response.ok) {
+        if (response.status === 401) {
+            retry();
+        } if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+            const subscribers = await response.json();
+            subscribers.sort(compare);
+            totalSubscribers(subscribers);
+            renderSubscribers(subscribers);
         }
-
-        const subscribers = await response.json();
-        console.log(subscribers);
-        totalSubscribers(subscribers);
-        renderSubscribers(subscribers);
     } catch (error) {
         console.error("Error fetching subscribers:", error);
         return null;
@@ -116,13 +121,51 @@ function renderSubscribers(subscribers) {
         });
 }
 
-document.getElementById("addSubscriber").addEventListener("click", async () => {
-    try {
-        const payload = {
-            emailAddress: document.getElementById('emailAddress').value || "",
-            firstName: document.getElementById('firstName').value || ""
-        };
+function totalSubscribers(subscribers) {
+    if (!subscribers) return 0;
+    if (Array.isArray(subscribers)) {
+        const total = subscribers.length;
+        const heading = document.getElementById("subscribersHeading");
+        heading.textContent = `${total} Subscriber${total === 1 ? "" : "s"}`;
+    }
+    
+}
 
+//#endregion
+
+//#region EVENT LISTENERS
+window.addEventListener("authReady", async (e) => {
+    const loggedIn = e.detail.valid;
+    if (loggedIn) {
+        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
+        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
+        let token = localStorage.getItem("id_token");
+        if (!token) {
+            console.warn("No id_token found after auth ready.");
+            return null;
+        }
+        getAPIMode();
+        getSubscribers();
+    }
+});
+//#endregion
+
+//#region BUTTONS
+form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    try {
+        const emailAddress = document.getElementById('emailAddress').value
+        const firstName = document.getElementById('firstName').value
+        if ((emailAddress || firstName) === (null || undefined || "")) {
+            throw new Error("No name or email address for new subscriber.");
+        }
+
+        const payload = {
+            emailAddress: emailAddress,
+            firstName: firstName
+        };
+        version = getAPIMode();
+        token = localStorage.getItem("id_token");
         const response = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
             method: "POST",
             headers: {
@@ -132,12 +175,14 @@ document.getElementById("addSubscriber").addEventListener("click", async () => {
             body: JSON.stringify(payload)
         });
 
-        if (!response.ok) {
+        if (response.status === 401) {
+            console.log("401 Error")
+            retry();
+        } if (!response.ok) {
             throw new Error(`HTTP error! Stage: ${response.stage}`);
         }
 
         data = await response.json();
-        // alert(`Successfully added ${emailAddress.value} as a subscriber`);
         document.getElementById('emailAddress').value = "";
         document.getElementById('firstName').value = "";
         getSubscribers();
@@ -152,16 +197,8 @@ document.getElementById("profileBtn").addEventListener("click", () => {
     window.location.href = `profile.html`;
 });
 
-function totalSubscribers(subscribers) {
-    if (!subscribers) return 0;
-    if (Array.isArray(subscribers)) {
-        const total = subscribers.length;
-        const heading = document.getElementById("subscribersHeading");
-        heading.textContent = `${total} Subscriber${total === 1 ? "" : "s"}`;
-    }
-    
-}
-
 document.getElementById('backBtn').onclick = () => {
   window.location.href = "index.html";
 };
+
+//#endregion

@@ -1,8 +1,9 @@
-// #region INITIALIZE
+//#region INITIALIZE
 // Initial values set
 let trixInitialized = false;
 let newsletterData = null;
 let newsletter = null;
+let authRetried = false;
 let form;
 let stageDiv;
 let sendDiv;
@@ -13,9 +14,9 @@ const version = getAPIMode();
 // Pulls newsletterId from the url
 const newsletterId = getNewsletterId();
 
-// #endregion
+//#endregion
 
-// #region FUNCTIONS
+//#region FUNCTIONS
 function getAPIMode() {
     const version = localStorage.getItem("version");
     return version;
@@ -26,8 +27,22 @@ function getNewsletterId() {
   return params.get('newsletterId');
 }
 
+function retry() {
+    if (!authRetried) {
+        authRetried = true;
+        const retryAuth = new CustomEvent("retryAuth", {
+            detail: {
+                retried: true,
+            },
+        });
+
+        window.dispatchEvent(retryAuth);
+    };
+}
+
 function getStats() {
     const version = getAPIMode();
+    token = localStorage.getItem("id_token");
     fetch(`https://api.dinod2.com/${version}/stats/${encodeURIComponent(newsletterId)}`, {
         method: "GET",
         headers: {
@@ -36,6 +51,10 @@ function getStats() {
         }
     })
     .then(res => {
+        if (res.status === 401) {
+            console.log("401 Error");
+            retry();
+        }
         if (!res.ok) throw new Error("Failed to load stats");
         return res.json();
     })
@@ -50,6 +69,7 @@ function getStats() {
 }
 
 async function loadNewsletterData(newsletterId) {
+  token = localStorage.getItem("id_token");
   try {
     const response = await fetch(`https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`, {
       method: "GET",
@@ -59,7 +79,12 @@ async function loadNewsletterData(newsletterId) {
       }
     });
 
-    if (!response.ok) throw new Error(`Failed to load newsletter: ${response.status}`);
+    if (response.status === 401) {
+      console.log("401 Error");
+      retry();
+    } if (!response.ok) {
+      throw new Error(`Failed to load newsletter: ${response.status}`);
+    }
 
     const newsletter = await response.json();
 
@@ -125,6 +150,7 @@ async function handleFormSubmit(event) {
 
   try {
     const version = getAPIMode();
+    token = localStorage.getItem("id_token");
     const response = await fetch(
       `https://api.dinod2.com/${version}/newsletters/${encodeURIComponent(newsletterId)}`,
       {
@@ -136,7 +162,14 @@ async function handleFormSubmit(event) {
         body: JSON.stringify(payload)
       }
     );
-    if (!response.ok) throw new Error("Failed to save newsletter");
+
+    if (response.status === 401) {
+      console.log("401 Error");
+      retry();
+    } if (!response.ok) {
+      throw new Error("Failed to save newsletter");
+    }
+
     stageDiv.textContent = "Newsletter saved!";
 
     // Update local variable
@@ -145,14 +178,52 @@ async function handleFormSubmit(event) {
     stageDiv.textContent = err.message;
   }
 }
-// #endregion
 
-// #region EVENT LISTENERS
+async function populateSubscriberDropdown() {
+    const userDropdown = document.getElementById("userDropdown");
+    token = localStorage.getItem("id_token");
+    // Populate users
+    try {
+        const subRes = await fetch(`https://api.dinod2.com/${version}/subscribers`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token
+            }
+        });
+
+        if (subRes.status === 401) {
+            console.log("401 Error");
+            retry();
+        }
+
+        const subscribers = subRes.ok ? await subRes.json() : [];
+        userDropdown.innerHTML = "";
+        let foundActive = false;
+        subscribers.forEach(sub => {
+            if (sub.condition == "Subscribed") {
+                foundActive = true;
+                const opt = document.createElement("option");
+                opt.value = JSON.stringify({ id: sub.id, email: sub.emailAddress });
+                opt.textContent = `${sub.firstName} (${sub.emailAddress})`;
+                userDropdown.appendChild(opt);
+            }
+        });
+        if (!foundActive) {
+            userDropdown.innerHTML = '<option value="">No active users</option>';
+        }
+    } catch (e) {
+        userDropdown.innerHTML = '<option value="">Error loading users</option>';
+    }
+}
+
+//#endregion
+
+//#region EVENT LISTENERS
 addEventListener("trix-initialize", handleTrixInitialize);
 
 window.addEventListener("authReady", async (e) => {
     const loggedIn = e.detail.valid;
-    console.log("The custom event was received.");
     if (loggedIn) {
         document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
         document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
@@ -169,6 +240,7 @@ window.addEventListener("authReady", async (e) => {
         newsletter = await loadNewsletterData(newsletterId);
 
         getStats();
+        populateSubscriberDropdown();
 
         if (form) {
           form.addEventListener("submit", handleFormSubmit);
@@ -182,40 +254,63 @@ window.addEventListener("authReady", async (e) => {
     }
 });
 
-document.addEventListener("DOMContentLoaded", async () => {
-    
-});
+//#endregion
 
-// document.addEventListener("DOMContentLoaded", async () => {
-//     if (!token) {
-//         return null
-//     }
-
-//     form = document.getElementById('newsletterForm');
-//     stageDiv = document.getElementById('stage');
-//     sendDiv = document.getElementById('send');
-
-//     newsletter = await loadNewsletterData(newsletterId);
-
-//     getStats();
-
-//     if (form) {
-//       form.addEventListener("submit", handleFormSubmit);
-//     }
-
-//     const existingEditor = document.querySelector("trix-editor");
-//     if (existingEditor && existingEditor.editor) {
-//         // simulate event.target if your handler needs it
-//         handleTrixInitialize({ target: existingEditor });
-//     }
-// });
-
-// #endregion
-
-// #region BUTTONS
+//#region BUTTONS
 document.getElementById('backBtn').onclick = () => {
   window.location.href = "index.html";
 };
+
+document.getElementById("testNewsletterBtn").addEventListener("click", async () => {
+    const userDropdown = document.getElementById("userDropdown");
+    const statusSpan = document.getElementById("testNewsletterStatus");
+    statusSpan.textContent = "";
+
+    if (!userDropdown.value || !newsletterId) {
+        statusSpan.textContent = "Please select both a user and a newsletter.";
+        return;
+    }
+
+    // parse the JSON payload we stored on the option value
+    let selected;
+    try {
+        selected = JSON.parse(userDropdown.value);
+    } catch (e) {
+        statusSpan.textContent = "Invalid user selected.";
+        return;
+    }
+
+    const userId = selected.id;
+    const recipient = selected.email;
+    token = localStorage.getItem("id_token");
+
+    try {
+        const response = await fetch(`https://api.dinod2.com/${version}/email`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token
+            },
+            body: JSON.stringify({
+                userId: userId,
+                emailAddress: recipient,
+                newsletterId: newsletterId
+            })
+        });
+
+        if (response.status === 401) {
+            console.log("401 Error");
+            retry();
+        } if (response.ok) {
+            statusSpan.textContent = "Email sent successfully!";
+        } else {
+            const error = await response.text();
+            statusSpan.textContent = "Failed: " + error;
+        }
+    } catch (err) {
+        statusSpan.textContent = "Error: " + err.message;
+    }
+});
 
 document.getElementById('sendAllBtn').onclick = async () => {
   const payload = {
@@ -228,6 +323,7 @@ document.getElementById('sendAllBtn').onclick = async () => {
     }
 
     const version = getAPIMode();
+    token = localStorage.getItem("id_token");
     const response = await fetch(
       `https://api.dinod2.com/${version}/emailAll`,
       {
@@ -239,11 +335,17 @@ document.getElementById('sendAllBtn').onclick = async () => {
         body: JSON.stringify(payload)
       }
     );
-    if (!response.ok) throw new Error("Failed to send newsletter to all subscribers");
+
+    if (response.status === 401) {
+      console.log("401 Error");
+      retry();
+    } if (!response.ok) {
+      throw new Error("Failed to send newsletter to all subscribers");
+    }
     sendDiv.textContent = "Newsletter sent to all subscribers!";
   } catch (err) {
     sendDiv.textContent = err.message;
   }
 }
 
-// #endregion
+//#endregion

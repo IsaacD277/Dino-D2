@@ -88,6 +88,23 @@
         <button type="submit">Save Newsletter</button>
       </form>
 
+      <!-- Send Newsletter Section -->
+      <div class="action-buttons">
+        <h3>Send Test Newsletter</h3>
+        <div class="send-newsletter-form">
+          <div>
+            <label for="userDropdown">Select Active User:</label>
+            <select id="userDropdown">
+              <option value="">Loading...</option>
+            </select>
+          </div>
+          <div class="action-buttons">
+            <button id="testNewsletterBtn">Send Test Newsletter to User</button>
+            <span id="testNewsletterStatus"></span>
+          </div>
+        </div>
+      </div>
+
       <div class="action-buttons">
         <button id="sendAllBtn">Send to All Subscribers</button>
         <button id="backBtn">← Back to Dashboard</button>
