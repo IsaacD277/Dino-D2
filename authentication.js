@@ -191,15 +191,17 @@ function identifyUser() {
 
 //#region EVENT LISTENERS
 
-document.addEventListener("DOMContentLoaded", () => {
-    // Run on page load
-    parseUrl();
+// document.addEventListener("DOMContentLoaded", () => {
 
-    // Requires a small delay or else receives 400 "invalid_grant" errors
-    setTimeout(() => {
-        checkAuthStatus();
-    }, 50);
-});
+// });
+
+// Run on page load
+parseUrl();
+
+// Requires a small delay or else receives 400 "invalid_grant" errors
+setTimeout(() => {
+    checkAuthStatus();
+}, 50);
 
 window.addEventListener("retryAuth", async (e) => {
     console.log("Retrying Auth");
@@ -221,7 +223,7 @@ window.addEventListener("retryAuth", async (e) => {
 document.getElementById("loginBtn").onclick = () => {
     localStorage.clear();
     const theUrl = `${domain}/login?response_type=${responseType}&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}`;
-    window.location.assign(theUrl);
+    // window.location.assign(theUrl);
 };
 
 // Logout Button
