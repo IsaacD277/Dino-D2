@@ -50,10 +50,8 @@ function setAuthStatus(status = false) {
 }
 
 async function checkAuthStatus(forceRefresh = false) {
-    console.log("Checking Auth Status");
     // Gather local variables
     const idToken = localStorage.getItem("id_token") || null;
-    console.log(forceRefresh);
 
     // If there is not a token, ask Cognito for one
     if (idToken === undefined || idToken === null) {
@@ -68,10 +66,8 @@ async function checkAuthStatus(forceRefresh = false) {
     const currentDate = Math.floor(Date.now() / 1000); // Date.now() returns milliseconds, expiration is in seconds
 
     if ((((expiration - requested) * 0.75) + parseInt(requested) < currentDate) || forceRefresh) {
-        console.log("REFRESHING")
         const theRefreshToken = localStorage.getItem("refresh_token");
         const refreshed = await refreshToken(theRefreshToken);
-        console.log("REFRESHED");
         setAuthStatus(refreshed);
         identifyUser();
         return;

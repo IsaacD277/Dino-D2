@@ -40,7 +40,6 @@ async function getSubscriberLink() {
         });
 
         if (response.status === 401) {
-            console.log("401 Error");
             retry();
         } if (!response.ok) {
             throw new Error("Failed to get Subscriber Link"); 
@@ -109,7 +108,6 @@ window.addEventListener("authReady", async (e) => {
         })
         .then(res => {
             if (res.status === 401) {
-                console.log("401 Error");
                 retry();
             }
             if (!res.ok) throw new Error("Failed to load profile");
@@ -170,7 +168,6 @@ form.addEventListener('submit', async (e) => {
         });
 
         if (response.status === 401) {
-            console.log("401 Error");
             retry();
         } if (!response.ok) {
             throw new Error("Failed to save profile");
