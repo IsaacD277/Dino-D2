@@ -176,7 +176,6 @@ form.addEventListener("submit", async (e) => {
         });
 
         if (response.status === 401) {
-            console.log("401 Error")
             retry();
         } if (!response.ok) {
             throw new Error(`HTTP error! Stage: ${response.stage}`);

@@ -52,7 +52,6 @@ function getStats() {
     })
     .then(res => {
         if (res.status === 401) {
-            console.log("401 Error");
             retry();
         }
         if (!res.ok) throw new Error("Failed to load stats");
@@ -80,7 +79,6 @@ async function loadNewsletterData(newsletterId) {
     });
 
     if (response.status === 401) {
-      console.log("401 Error");
       retry();
     } if (!response.ok) {
       throw new Error(`Failed to load newsletter: ${response.status}`);
@@ -130,6 +128,72 @@ function handleTrixInitialize(event) {
     }
 }
 
+async function getUploadURL() {
+    try {
+        const response = await fetch(`https://api.dinod2.com/development/upload`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+            const theUrl = await response.json();
+            return theUrl
+        }
+    } catch (error) {
+        console.error("Error fetching signed URL:", error);
+        return null;
+    }
+}
+
+async function uploadImage(event) {
+    try {
+        const image = event.attachment.file;
+        if (!image) {
+            throw new Error("There is no image to upload");
+        }
+
+        responseObject = await getUploadURL();
+
+        console.log("Uploading to: " + responseObject.url + responseObject.fields.key);
+
+        const formdata = new FormData();
+
+        formdata.append("Content-Type", image.type);
+        formdata.append("key", responseObject.fields.key);
+        formdata.append("AWSAccessKeyId", responseObject.fields.AWSAccessKeyId);
+        formdata.append("policy", responseObject.fields.policy);
+        formdata.append("signature", responseObject.fields.signature);
+        formdata.append("file", image);
+
+        const response = await fetch(responseObject.url, {
+            method: "POST",
+            body: formdata
+        });
+
+        if (response.status === 204) {
+            const result = await response;
+            const imageLink = responseObject.url + responseObject.fields.key;
+
+            var attributes = {
+                url: imageLink,
+                href: imageLink + "?content-disposition=attachment"
+            };
+
+            event.attachment.setAttributes(attributes);
+            return true;
+        } else {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        };
+    } catch (error) {
+        console.error("Error uploading image:", error);
+        return false;
+    }
+}
+
 async function handleFormSubmit(event) {
   event.preventDefault();
   stageDiv.textContent = "";
@@ -164,7 +228,6 @@ async function handleFormSubmit(event) {
     );
 
     if (response.status === 401) {
-      console.log("401 Error");
       retry();
     } if (!response.ok) {
       throw new Error("Failed to save newsletter");
@@ -193,7 +256,6 @@ async function populateSubscriberDropdown() {
         });
 
         if (subRes.status === 401) {
-            console.log("401 Error");
             retry();
         }
 
@@ -254,6 +316,10 @@ window.addEventListener("authReady", async (e) => {
     }
 });
 
+addEventListener("trix-attachment-add", (event) => {
+  uploadImage(event);
+})
+
 //#endregion
 
 //#region BUTTONS
@@ -299,7 +365,6 @@ document.getElementById("testNewsletterBtn").addEventListener("click", async () 
         });
 
         if (response.status === 401) {
-            console.log("401 Error");
             retry();
         } if (response.ok) {
             statusSpan.textContent = "Email sent successfully!";
@@ -337,7 +402,6 @@ document.getElementById('sendAllBtn').onclick = async () => {
     );
 
     if (response.status === 401) {
-      console.log("401 Error");
       retry();
     } if (!response.ok) {
       throw new Error("Failed to send newsletter to all subscribers");

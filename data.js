@@ -50,7 +50,6 @@ async function getNewsletters() {
         });
 
         if (response.status === 401) {
-            console.log("401 error")
             retry();
         } if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -145,7 +144,6 @@ document.getElementById("addNewsletter").addEventListener("click", async () => {
         });
 
         if (response.status === 401) {
-            console.log("401 Error");
             retry();
         } if (!response.ok) {
             throw new Error(`HTTP error! Stage: ${response.stage}`);
