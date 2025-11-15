@@ -129,15 +129,19 @@ function handleTrixInitialize(event) {
 }
 
 async function getUploadURL() {
+    token = localStorage.getItem("id_token");
     try {
         const response = await fetch(`https://api.dinod2.com/${version}/upload`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: token
             }
         });
         
-        if (!response.ok) {
+        if (response.status === 401) {
+            retry();
+        } if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         } else {
             const theUrl = await response.json();
