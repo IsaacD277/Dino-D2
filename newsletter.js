@@ -130,7 +130,7 @@ function handleTrixInitialize(event) {
 
 async function getUploadURL() {
     try {
-        const response = await fetch(`https://api.dinod2.com/development/upload`, {
+        const response = await fetch(`https://api.dinod2.com/${version}/upload`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
