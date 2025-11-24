@@ -325,7 +325,7 @@ addEventListener("trix-attachment-add", (event) => {
 
 //#region BUTTONS
 document.getElementById('backBtn').onclick = () => {
-  window.location.href = "index.html";
+  window.location.href = "/";
 };
 
 document.getElementById("testNewsletterBtn").addEventListener("click", async () => {
