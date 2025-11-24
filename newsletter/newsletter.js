@@ -291,8 +291,6 @@ addEventListener("trix-initialize", handleTrixInitialize);
 window.addEventListener("authReady", async (e) => {
     const loggedIn = e.detail.valid;
     if (loggedIn) {
-        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
-        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
         token = localStorage.getItem("id_token");
         if (!token) {
             console.warn("No id_token found after auth ready.");
@@ -314,7 +312,6 @@ window.addEventListener("authReady", async (e) => {
 
         const existingEditor = document.querySelector("trix-editor");
         if (existingEditor && existingEditor.editor) {
-            // simulate event.target if your handler needs it
             handleTrixInitialize({ target: existingEditor });
         }
     }

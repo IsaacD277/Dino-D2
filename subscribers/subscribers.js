@@ -106,7 +106,7 @@ function renderSubscribers(subscribers) {
         button.textContent = "Edit";
 
         button.addEventListener("click", () => {
-            window.location.href = `subscriber.html?subscriberId=${sub.id}`;
+            window.location.href = `/subscribers/subscriber/?subscriberId=${sub.id}`;
         });
 
             actionTd.appendChild(button);
@@ -134,11 +134,19 @@ function totalSubscribers(subscribers) {
 //#endregion
 
 //#region EVENT LISTENERS
+window.addEventListener("DOMContentLoaded", async (e) => {
+    let token = localStorage.getItem("id_token");
+    if (!token) {
+        console.warn("No id_token found after auth ready.");
+        return null;
+    }
+    getAPIMode();
+    getSubscribers();
+})
+
 window.addEventListener("authReady", async (e) => {
     const loggedIn = e.detail.valid;
     if (loggedIn) {
-        document.getElementById("loggedOutView").style.display = loggedIn ? "none" : "block";
-        document.getElementById("loggedInView").style.display = loggedIn ? "block" : "none";
         let token = localStorage.getItem("id_token");
         if (!token) {
             console.warn("No id_token found after auth ready.");
@@ -146,6 +154,8 @@ window.addEventListener("authReady", async (e) => {
         }
         getAPIMode();
         getSubscribers();
+    } else {
+        window.location.href = "https://dinod2.com"
     }
 });
 //#endregion
@@ -193,11 +203,7 @@ form.addEventListener("submit", async (e) => {
 });
 
 document.getElementById("profileBtn").addEventListener("click", () => {
-    window.location.href = `profile.html`;
+    window.location.href = `/profile/`;
 });
-
-document.getElementById('backBtn').onclick = () => {
-  window.location.href = "index.html";
-};
 
 //#endregion
