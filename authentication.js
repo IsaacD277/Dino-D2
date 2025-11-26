@@ -57,6 +57,10 @@ async function checkAuthStatus(forceRefresh = false) {
     if (idToken === undefined || idToken === null) {
         const hasToken = await getToken();
         setAuthStatus(hasToken);
+        if (!hasToken) {
+            localStorage.clear();
+            window.location.href = "https://dinod2.com";
+        }
         identifyUser();
         return;
     }
@@ -69,6 +73,10 @@ async function checkAuthStatus(forceRefresh = false) {
         const theRefreshToken = localStorage.getItem("refresh_token");
         const refreshed = await refreshToken(theRefreshToken);
         setAuthStatus(refreshed);
+        if (!refreshed) {
+            localStorage.clear();
+            window.location.href = "https://dinod2.com";
+        }
         identifyUser();
         return;
     }
