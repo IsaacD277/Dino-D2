@@ -18,17 +18,6 @@ body {
     margin: 0 auto;
 }
 
-/* Logged Out View */
-#loggedOutView {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    padding: 20px;
-}
-
 /* Section Styles */
 .section {
     background: white;
@@ -100,29 +89,6 @@ input:-webkit-autofill:focus {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-/* button {
-    padding: 0.75em 2em;
-    border: none;
-    border-radius: 9999px;
-    font-size: 1em;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-button:not(.profile-btn):not(.logout-btn):not(.login-btn) {
-    background-color: #E17163;
-    color: white;
-    box-shadow: 0 4px 12px rgba(225, 113, 99, 0.3);
-}
-
-button:not(.profile-btn):not(.logout-btn):not(.login-btn):hover {
-    background-color: #277A7D;
-    transform: scale(1.05);
-    box-shadow: 0 6px 20px rgba(39, 122, 125, 0.4);
-} */
-
 #addNewsletter {
     margin-bottom: 1.5em;
     margin-bottom: 0;
@@ -155,7 +121,8 @@ td {
 }
 
 tbody tr:hover {
-    background-color: #f7fafc;
+    background-color: #edf1f0;
+    cursor: pointer;
 }
 
 tbody tr:last-child td {
