@@ -101,24 +101,17 @@ function renderSubscribers(subscribers) {
         const statusTd = document.createElement("td");
         statusTd.textContent = sub.condition || "";
 
-        const actionTd = document.createElement("td");
-        const button = document.createElement("button");
-        button.textContent = "Edit";
+        tr.appendChild(nameTd);
+        tr.appendChild(emailTd);
+        tr.appendChild(joinedTd);
+        tr.appendChild(statusTd);
 
-        button.addEventListener("click", () => {
+        tr.addEventListener ("click", () => {
             window.location.href = `/subscribers/subscriber/?subscriberId=${sub.id}`;
-        });
+        })
 
-            actionTd.appendChild(button);
-
-            tr.appendChild(nameTd);
-            tr.appendChild(emailTd);
-            tr.appendChild(joinedTd);
-            tr.appendChild(statusTd);
-            tr.appendChild(actionTd);
-
-            tbody.appendChild(tr);
-        });
+        tbody.appendChild(tr);
+    });
 }
 
 function totalSubscribers(subscribers) {
@@ -154,8 +147,6 @@ window.addEventListener("authReady", async (e) => {
         }
         getAPIMode();
         getSubscribers();
-    } else {
-        window.location.href = "https://dinod2.com"
     }
 });
 //#endregion
